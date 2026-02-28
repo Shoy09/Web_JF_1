@@ -1,0 +1,28 @@
+<div class="login-container">
+  <div class="login-card">
+
+    <h2>Crear Usuario</h2>
+
+    <form [formGroup]="registerForm" (ngSubmit)="register()">
+
+      <input type="text" formControlName="codigo_dni" placeholder="DNI">
+      <input type="text" formControlName="apellidos" placeholder="Apellidos">
+      <input type="text" formControlName="nombres" placeholder="Nombres">
+      <input type="text" formControlName="cargo" placeholder="Cargo">
+      <input type="text" formControlName="rol" placeholder="Rol">
+      <input type="email" formControlName="correo" placeholder="Correo">
+      <input type="password" formControlName="password" placeholder="Contraseña" autocomplete="new-password">
+
+      <button type="submit" [disabled]="registerForm.invalid || loading">
+        {{ loading ? 'Creando...' : 'Crear Usuario' }}
+      </button>
+
+    </form>
+
+    <p>
+      ¿Ya tienes cuenta?
+      <a routerLink="/login">Iniciar sesión</a>
+    </p>
+
+  </div>
+</div>

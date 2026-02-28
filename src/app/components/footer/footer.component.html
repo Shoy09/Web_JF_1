@@ -1,0 +1,77 @@
+<div class="footer-container">
+
+<!-- NOTICIAS -->
+<section class="footer-news">
+  <div #newsCarousel class="footer-news__content carrusel-mobile">
+    <article class="footer-news__item" *ngFor="let news of footerData.noticias">
+      <div class="footer-news__date">— {{ news.fecha }}</div>
+      <h5>
+        <a [href]="news.url">{{ news.titulo }}</a>
+      </h5>
+    </article>
+  </div>
+ 
+  <!-- Indicadores tipo líneas -->
+  <div class="news-indicators">
+    <span 
+      *ngFor="let news of footerData.noticias; let i = index"
+      [class.active]="i === currentIndex">
+    </span>
+  </div>
+</section>
+
+
+
+  <!-- FOOTER PRINCIPAL -->
+  <footer class="footer">
+    <!-- Imagen de fondo movida del CSS al HTML -->
+    <img src="/mountain-footer--green.png" class="footer-bg" alt="Footer background" />
+    
+    <div class="footer__content">
+      <!-- IZQUIERDA -->
+      <div class="footer__left">
+        <nav class="footer__menu">
+          <div class="footer__menu-row">
+            <ng-container *ngFor="let item of footerData.menuIzquierda; let last = last">
+              <a [routerLink]="item.ruta">{{ item.label }}</a>
+              <span *ngIf="!last" class="separator">|</span>
+            </ng-container>
+          </div>
+        </nav>
+        <div class="sticky-side left-side">
+          Copyright © {{ currentYear }} {{ footerData.copyright }}
+        </div>
+      </div>
+
+      <!-- CENTRO -->
+      <div class="footer__center">
+        <img [src]="footerData.logoCentro" alt="Logo" class="footer__logo" />
+      </div>
+
+      <!-- DERECHA -->
+      <div class="footer__right">
+        <div class="footer__contact">
+          <p>
+            Llámanos:
+            <a [href]="'tel:' + footerData.contacto.telefono">{{ footerData.contacto.telefono }}</a>
+          </p>
+          <p>
+            Email:
+            <a [href]="'mailto:' + footerData.contacto.email">{{ footerData.contacto.email }}</a>
+          </p>
+        </div>
+
+        <div class="sticky-side right-side">
+          <div class="social-iconos">
+            <span class="follow-text">SIGUENOS EN —</span>
+            <i *ngFor="let social of footerData.redes">
+              <a [href]="social.url" [attr.aria-label]="social.nombre" target="_blank">
+                <i [class]="social.icon"></i>
+              </a>
+            </i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>

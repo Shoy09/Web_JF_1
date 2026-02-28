@@ -1,0 +1,39 @@
+<div class="admin-container">
+  
+  <nav class="admin-menu">
+    <h1>ADMINISTRADOR</h1>
+
+    <h2>
+      <a routerLink="profile" routerLinkActive="active">Mi Perfil</a>
+    </h2>
+
+    <a routerLink="home" routerLinkActive="active">Home</a>
+    <a routerLink="footer" routerLinkActive="active">Footer</a>
+    <a routerLink="navbar" routerLinkActive="active">Nav-bar</a>
+    <a routerLink="about" routerLinkActive="active">Acerca de</a>
+    <a routerLink="general-product" routerLinkActive="active">General Product</a>
+    <a routerLink="products" routerLinkActive="active">Productos</a>
+    <a routerLink="contact" routerLinkActive="active">Contacto</a>
+    <a routerLink="mas-info" routerLinkActive="active">Más Información</a>
+    <a routerLink="history" routerLinkActive="active">Nuestra Historia</a>
+    <a routerLink="noticias" routerLinkActive="active">Noticias</a>
+    
+
+
+    <!-- Cerrar sesión -->
+    <button class="logout-btn" (click)="cerrarSesion()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+        <polyline points="16 17 21 12 16 7"/>
+        <line x1="21" y1="12" x2="9" y2="12"/>
+      </svg>
+      Cerrar sesión
+    </button>
+
+  </nav>
+
+  <main class="admin-content">
+    <router-outlet></router-outlet>
+  </main>
+
+</div>

@@ -1,0 +1,139 @@
+<!-- noticias-editor.component.html -->
+<div class="editor-container">
+  <h1>
+    <span></span>
+    Editor de Comunicado
+    <span class="header-badge">Noticias</span>
+  </h1>
+
+  <mat-tab-group animationDuration="300ms" [dynamicHeight]="true">
+    <!-- ENCABEZADO -->
+    <mat-tab label="Encabezado">
+      <mat-card class="tab-card">
+        <form>
+          <div class="form-grid">
+            <div class="full-width section-group">
+              <h3>
+                <mat-icon style="margin-right: 0.5rem; color: #3b82f6;">headline</mat-icon>
+                Información del Comunicado
+              </h3>
+              
+              <div class="form-grid" style="margin-top: 1rem;">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Categoría</mat-label>
+                  <input matInput [(ngModel)]="noticia.categoria" name="categoria" placeholder="Categoría del comunicado">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Título Principal</mat-label>
+                  <textarea matInput [(ngModel)]="noticia.titulo" name="titulo" rows="3" placeholder="Título del comunicado"></textarea>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Fecha de Publicación</mat-label>
+                  <input matInput [(ngModel)]="noticia.fechaPublicacion" name="fecha" placeholder="YYYY-MM-DD">
+                  <mat-hint>Formato: AAAA-MM-DD</mat-hint>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </form>
+      </mat-card>
+    </mat-tab>
+
+    <!-- CUERPO -->
+    <mat-tab label="Cuerpo">
+      <mat-card class="tab-card">
+        <form>
+          <div class="form-grid">
+            <div class="full-width section-group">
+              <h3>
+                <mat-icon style="margin-right: 0.5rem; color: #3b82f6;">notes</mat-icon>
+                Párrafos del Comunicado
+              </h3>
+              
+              <div *ngFor="let p of noticia.parrafos; let i = index; trackBy: trackByIndex" style="margin-bottom: 1rem;">
+                <div style="display: flex; gap: 0.5rem; align-items: flex-start;">
+                  <mat-form-field appearance="outline" style="flex: 1;">
+                    <mat-label>Párrafo #{{i + 1}}</mat-label>
+                    <textarea matInput [(ngModel)]="noticia.parrafos[i]" [name]="'parrafo' + i" rows="3" placeholder="Contenido del párrafo"></textarea>
+                  </mat-form-field>
+                  <button mat-icon-button color="warn" type="button" (click)="eliminarParrafo(i)" matTooltip="Eliminar párrafo">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+              
+              <button mat-raised-button type="button" (click)="agregarParrafo()" style="margin-top: 0.5rem;">
+                <mat-icon>add</mat-icon> Agregar párrafo
+              </button>
+            </div>
+          </div>
+        </form>
+      </mat-card>
+    </mat-tab>
+
+    <!-- FIRMA Y CONTACTO -->
+    <mat-tab label="Firma y Contacto">
+      <mat-card class="tab-card">
+        <form>
+          <div class="form-grid">
+            <div class="full-width section-group">
+              <h3>
+                <mat-icon style="margin-right: 0.5rem; color: #3b82f6;">signature</mat-icon>
+                Firma
+              </h3>
+              
+              <div class="form-grid" style="margin-top: 1rem;">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Nombre de Firma</mat-label>
+                  <input matInput [(ngModel)]="noticia.firmaNombre" name="firmaNombre" placeholder="Nombre del firmante">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Cargo / Título</mat-label>
+                  <input matInput [(ngModel)]="noticia.firmaCargo" name="firmaCargo" placeholder="Director, Presidente, etc.">
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="full-width section-group" style="margin-top: 2rem;">
+              <h3>
+                <mat-icon style="margin-right: 0.5rem; color: #3b82f6;">contact_mail</mat-icon>
+                Contacto
+              </h3>
+              
+              <div class="form-grid" style="margin-top: 1rem;">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Email de Contacto</mat-label>
+                  <input matInput [(ngModel)]="noticia.contactoEmail" name="contactoEmail" placeholder="correo@ejemplo.com" type="email">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Nombre de Contacto</mat-label>
+                  <input matInput [(ngModel)]="noticia.contactoNombre" name="contactoNombre" placeholder="Nombre de la persona de contacto">
+                  <mat-hint>Opcional</mat-hint>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </form>
+      </mat-card>
+    </mat-tab>
+  </mat-tab-group>
+
+  @if (showSuccessMessage) {
+    <div class="notification">
+      ✅ Comunicado actualizado correctamente
+    </div>
+  }
+
+  <!-- Acciones principales -->
+    <!-- BOTONES ACCIONES -->
+  <div class="actions">
+    <button mat-raised-button color="warn" (click)="resetForm()">Cancelar</button>
+    <button mat-raised-button color="primary" (click)="guardarCambios()">
+      <mat-icon>save</mat-icon> Guardar cambios
+    </button>
+  </div>
+</div>

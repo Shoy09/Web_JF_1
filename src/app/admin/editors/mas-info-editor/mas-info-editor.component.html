@@ -1,0 +1,236 @@
+<!-- mas-info-editor.component.html -->
+<div class="editor-container">
+
+  <!-- HEADER -->
+  <h1>
+    <span></span>
+    Editor Más Información
+    <span class="header-badge">Página Secundaria</span>
+  </h1>
+
+  <mat-tab-group animationDuration="300ms" [dynamicHeight]="true">
+
+    <!-- ================= HERO ================= -->
+    <mat-tab label="Hero">
+      <mat-card class="tab-card">
+        <h3>Sección Hero</h3>
+        <form>
+          <div class="form-grid">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Título principal</mat-label>
+              <input matInput [(ngModel)]="data.hero.titulo" name="heroTitulo" placeholder="Título de la página">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Subtítulo</mat-label>
+              <input matInput [(ngModel)]="data.hero.subtitulo" name="heroSubtitulo" placeholder="Subtítulo descriptivo">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Imagen de fondo (URL)</mat-label>
+              <input matInput [(ngModel)]="data.hero.imagenFondo" name="heroImagen" placeholder="/assets/images/hero-bg.jpg">
+            </mat-form-field>
+          </div>
+
+          <h3 style="margin-top: 1.5rem;">Botón del Hero <span class="optional-badge">opcional</span></h3>
+
+          <div *ngIf="data.hero.boton" class="card-editor">
+            <div class="form-grid">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Texto del botón</mat-label>
+                <input matInput [(ngModel)]="data.hero.boton.label" name="botonLabel" placeholder="Ver más">
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>URL del botón</mat-label>
+                <input matInput [(ngModel)]="data.hero.boton.url" name="botonUrl" placeholder="/mas-informacion">
+              </mat-form-field>
+            </div>
+            <button mat-raised-button color="warn" type="button" (click)="removeHeroButton()">
+              <mat-icon>delete</mat-icon> Eliminar botón
+            </button>
+            <hr>
+          </div>
+
+          <button *ngIf="!data.hero.boton" mat-raised-button color="primary" type="button" (click)="addHeroButton()">
+            <mat-icon>add</mat-icon> Agregar botón al Hero
+          </button>
+        </form>
+      </mat-card>
+    </mat-tab>
+
+    <!-- ================= CONTENT SECTIONS ================= -->
+    <mat-tab label="Contenido">
+      <mat-card class="tab-card">
+        <h3>Secciones de Contenido</h3>
+        <form>
+          <div *ngFor="let section of data.contentSections; let i = index; trackBy: trackByIndex" style="margin-bottom: 1rem;">
+            <mat-expansion-panel class="expansion-item">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <mat-icon>article</mat-icon>
+                  {{ section.titulo || 'Sección de contenido #' + (i + 1) }}
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+
+              <div class="form-grid" style="margin-top: 1rem;">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Título de la sección</mat-label>
+                  <input matInput [(ngModel)]="section.titulo" [name]="'contentTitulo' + i" placeholder="Título de la sección">
+                </mat-form-field>
+
+                <div class="full-width">
+                  <div *ngFor="let p of section.parrafos; let j = index; trackBy: trackByIndex" class="flex-row">
+                    <mat-form-field appearance="outline" class="full-width">
+                      <mat-label>Párrafo {{j + 1}}</mat-label>
+                      <textarea matInput [value]="p" (input)="updateContentParagraph(i, j, $event)" rows="2"></textarea>
+                    </mat-form-field>
+                    <button mat-icon-button color="warn" type="button" (click)="removeContentParagraph(i, j)" matTooltip="Eliminar párrafo">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+
+                  <button mat-raised-button color="primary" type="button" (click)="addContentParagraph(i)">
+                    <mat-icon>add</mat-icon> Agregar párrafo
+                  </button>
+                </div>
+
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Imagen (URL - opcional)</mat-label>
+                  <input matInput [(ngModel)]="section.imagen" [name]="'contentImagen' + i" placeholder="/assets/images/section-image.jpg">
+                </mat-form-field>
+
+                <div class="full-width panel-actions">
+                  <mat-checkbox [(ngModel)]="section.reverse" [name]="'contentReverse' + i">
+                    Invertir orden (imagen a la derecha)
+                  </mat-checkbox>
+
+                  <button mat-raised-button color="warn" type="button" (click)="removeContentSection(i)" *ngIf="data.contentSections.length > 1">
+                    <mat-icon>delete</mat-icon> Eliminar sección
+                  </button>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </div>
+
+          <button mat-raised-button color="primary" type="button" (click)="addContentSection()">
+            <mat-icon>add</mat-icon> Nueva sección
+          </button>
+        </form>
+      </mat-card>
+    </mat-tab>
+
+    <!-- ================= INFO SECTIONS ================= -->
+    <mat-tab label="Secciones Informativas">
+      <mat-card class="tab-card">
+        <h3>Secciones Informativas</h3>
+        <form>
+          <div *ngFor="let section of data.sections; let i = index; trackBy: trackByIndex" style="margin-bottom: 1rem;">
+            <mat-expansion-panel class="expansion-item">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <mat-icon>info</mat-icon>
+                  {{ section.titulo || 'Sección informativa #' + (i + 1) }}
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+
+              <div class="form-grid" style="margin-top: 1rem;">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Título de la sección</mat-label>
+                  <input matInput [(ngModel)]="section.titulo" [name]="'infoTitulo' + i" placeholder="Título de la sección">
+                </mat-form-field>
+
+                <div class="full-width">
+                  <div *ngFor="let p of section.parrafos; let j = index; trackBy: trackByIndex" class="flex-row">
+                    <mat-form-field appearance="outline" class="full-width">
+                      <mat-label>Párrafo {{j + 1}}</mat-label>
+                      <textarea matInput [value]="p" (input)="updateInfoParagraph(i, j, $event)" rows="2"></textarea>
+                    </mat-form-field>
+                    <button mat-icon-button color="warn" type="button" (click)="removeInfoParagraph(i, j)" matTooltip="Eliminar párrafo">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+
+                  <button mat-raised-button color="primary" type="button" (click)="addInfoParagraph(i)">
+                    <mat-icon>add</mat-icon> Agregar párrafo
+                  </button>
+                </div>
+
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Imagen (URL)</mat-label>
+                  <input matInput [(ngModel)]="section.imagen" [name]="'infoImagen' + i" placeholder="/assets/images/info-section.jpg">
+                </mat-form-field>
+
+                <div class="full-width panel-actions">
+                  <mat-checkbox [(ngModel)]="section.reverse" [name]="'infoReverse' + i">
+                    Invertir orden (imagen a la derecha)
+                  </mat-checkbox>
+
+                  <button mat-raised-button color="warn" type="button" (click)="removeInfoSection(i)" *ngIf="data.sections.length > 1">
+                    <mat-icon>delete</mat-icon> Eliminar sección
+                  </button>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </div>
+
+          <button mat-raised-button color="primary" type="button" (click)="addInfoSection()">
+            <mat-icon>add</mat-icon> Nueva sección
+          </button>
+        </form>
+      </mat-card>
+    </mat-tab>
+
+    <!-- ================= BOTTOM BANNER ================= -->
+    <mat-tab label="Banner Inferior">
+      <mat-card class="tab-card">
+        <h3>Banner Inferior</h3>
+        <form>
+          <div *ngIf="data.bottomBanner; else noBanner" class="card-editor">
+            <div class="form-grid">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Título del banner</mat-label>
+                <input matInput [(ngModel)]="data.bottomBanner.titulo" name="bannerTitulo" placeholder="¿Hablamos?">
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Texto del banner</mat-label>
+                <textarea matInput [(ngModel)]="data.bottomBanner.texto" name="bannerTexto" rows="2" placeholder="Contacta con nosotros para más información"></textarea>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Imagen de fondo (URL)</mat-label>
+                <input matInput [(ngModel)]="data.bottomBanner.imagen" name="bannerImagen" placeholder="/assets/images/banner.jpg">
+              </mat-form-field>
+            </div>
+            <button mat-raised-button color="warn" type="button" (click)="removeBottomBanner()">
+              <mat-icon>delete</mat-icon> Eliminar banner
+            </button>
+            <hr>
+          </div>
+
+          <ng-template #noBanner>
+            <button mat-raised-button color="primary" type="button" (click)="addBottomBanner()">
+              <mat-icon>add</mat-icon> Agregar banner inferior
+            </button>
+          </ng-template>
+        </form>
+      </mat-card>
+    </mat-tab>
+
+  </mat-tab-group>
+
+  <!-- BOTONES ACCIONES -->
+  <div class="actions">
+    <button mat-raised-button color="warn" (click)="resetForm()">Cancelar</button>
+    <button mat-raised-button color="primary" (click)="save()">
+      <mat-icon>save</mat-icon> Guardar cambios
+    </button>
+  </div>
+
+  <!-- NOTIFICACIÓN -->
+  <div *ngIf="showSuccessMessage" class="notification">
+    ✅ Página actualizada correctamente
+  </div>
+
+</div>

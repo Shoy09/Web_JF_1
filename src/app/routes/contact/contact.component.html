@@ -1,0 +1,214 @@
+<section class="contact-container" *ngIf="content; else loading">
+
+  <!-- HEADER -->
+  <div class="contact-header">
+    <span class="subtitle">{{ content.header.subtitle }}</span>
+    <h1>{{ content.header.title }}</h1>
+
+    <!-- REGION SELECT -->
+    <div class="region-select-wrapper">
+      <mat-form-field appearance="outline" class="region-select">
+        <mat-label>{{ content.header.regionLabel }}</mat-label>
+        <input
+          matInput
+          type="text"
+          [placeholder]="content.header.regionPlaceholder"
+          [formControl]="regionControl"
+          [matAutocomplete]="auto"
+        />
+        
+        <!-- Icono de búsqueda -->
+        <mat-icon matPrefix>search</mat-icon>
+        
+        <!-- Botón limpiar -->
+        <button
+          mat-icon-button
+          matSuffix
+          *ngIf="regionControl.value"
+          (click)="clearRegion()"
+          aria-label="Clear selection"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        
+        <mat-autocomplete
+          #auto="matAutocomplete"
+          [displayWith]="displayFn"
+          (optionSelected)="selectRegion($event.option.value)"
+          class="region-autocomplete"
+        >
+          <mat-option
+            *ngFor="let region of filteredRegions | async"
+            [value]="region"
+            class="region-option"
+          >
+            <mat-icon class="region-icon">place</mat-icon>
+            <span class="region-label">{{ region.label }}</span>
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+      
+      <!-- Help text -->
+      <p class="select-help">{{ content.header.selectHelp }}</p>
+    </div>
+  </div>
+
+  <!-- REGION INFO PANEL -->
+  <div 
+    class="region-panel" 
+    *ngIf="selectedRegion"
+  >
+    <div class="panel-arrow"></div>
+    
+    <button class="close-panel" (click)="clearRegion()" aria-label="Close panel">
+      <mat-icon>close</mat-icon>
+    </button>
+
+    <div class="panel-content">
+      <div class="panel-block">
+        <span class="panel-title">
+          <mat-icon class="panel-icon">person</mat-icon>
+          {{ selectedRegion.label | uppercase }} REGIONAL CONTACT
+        </span>
+
+        <h3>{{ selectedRegion.contact.name }}</h3>
+
+        <div class="contact-info">
+          <div class="contact-item" *ngFor="let phone of selectedRegion.contact.phones">
+            <mat-icon class="contact-icon">phone</mat-icon>
+            <span>Mobile: {{ phone }}</span>
+          </div>
+          
+          <div class="contact-item email">
+            <mat-icon class="contact-icon">email</mat-icon>
+            <a [href]="'mailto:' + selectedRegion.contact.email" class="email-link">
+              {{ selectedRegion.contact.email }}
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-block">
+        <span class="panel-title">
+          <mat-icon class="panel-icon">business</mat-icon>
+          OFFICES
+        </span>
+
+        <p class="country">
+          <mat-icon class="contact-icon">flag</mat-icon>
+          {{ selectedRegion.contact.office.country }}
+        </p>
+
+        <div class="office-info">
+          <div class="contact-item">
+            <mat-icon class="contact-icon">location_on</mat-icon>
+            <span>{{ selectedRegion.contact.office.address }}</span>
+          </div>
+          <div class="contact-item">
+            <mat-icon class="contact-icon">phone</mat-icon>
+            <span>Office Phone: {{ selectedRegion.contact.office.phone }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="contact-content">
+    <!-- LEFT TEXT -->
+    <div class="contact-info">
+      <p *ngFor="let text of content.body.leftTexts">
+        {{ text }}
+      </p>
+
+      <p class="bold" *ngIf="content.body.boldText">
+        {{ content.body.boldText }}
+      </p>
+    </div>
+
+    <!-- FORM -->
+    <form class="contact-form">
+      <div class="row">
+        <!-- Primera fila: Nombre y Apellido -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{ content.body.formFields[0].label }}</mat-label>
+          <input 
+            matInput 
+            [placeholder]="content.body.formFields[0].placeholder" 
+            [required]="content.body.formFields[0].required" 
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ content.body.formFields[1].label }}</mat-label>
+          <input 
+            matInput 
+            [placeholder]="content.body.formFields[1].placeholder" 
+            [required]="content.body.formFields[1].required" 
+          />
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+        <!-- Segunda fila: Email y Teléfono -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{ content.body.formFields[2].label }}</mat-label>
+          <input 
+            matInput 
+            [type]="content.body.formFields[2].type || 'text'"
+            [placeholder]="content.body.formFields[2].placeholder" 
+            [required]="content.body.formFields[2].required" 
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ content.body.formFields[3].label }}</mat-label>
+          <input 
+            matInput 
+            [placeholder]="content.body.formFields[3].placeholder" 
+            [required]="content.body.formFields[3].required" 
+          />
+        </mat-form-field>
+      </div>
+
+      <!-- Campo Empresa -->
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>{{ content.body.formFields[4].label }}</mat-label>
+        <input 
+          matInput 
+          [placeholder]="content.body.formFields[4].placeholder" 
+          [required]="content.body.formFields[4].required" 
+        />
+      </mat-form-field>
+
+      <!-- Campo Comentarios -->
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>{{ content.body.formFields[5].label }}</mat-label>
+        <textarea
+          matInput
+          [rows]="content.body.formFields[5].rows || 6"
+          [placeholder]="content.body.formFields[5].placeholder"
+          [required]="content.body.formFields[5].required"
+        ></textarea>
+      </mat-form-field>
+
+      <div class="actions">
+        <button mat-flat-button color="primary" class="send-button">
+          <mat-icon>send</mat-icon>
+          {{ content.body.sendButtonLabel }}
+        </button>
+      </div>
+
+      <p class="legal">
+        {{ content.body.legalText }}
+      </p>
+    </form>
+  </div>
+</section>
+
+<ng-template #loading>
+  <div class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Cargando...</p>
+  </div>
+</ng-template>

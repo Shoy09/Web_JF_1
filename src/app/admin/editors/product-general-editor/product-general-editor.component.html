@@ -1,0 +1,194 @@
+<!-- product-general-editor.component.html -->
+<div class="editor-container" *ngIf="form">
+  <h1>
+    <span></span>
+    Editor de Producto General
+    <span class="header-badge">Productos</span>
+  </h1>
+
+  <form [formGroup]="form">
+    <mat-tab-group animationDuration="300ms" [dynamicHeight]="true">
+      <!-- ================= HEADER ================= -->
+      <mat-tab label="Header">
+        <mat-card class="tab-card">
+          <div class="form-grid" formGroupName="headerData">
+            <div class="full-width section-group">
+              <h3>
+                <mat-icon style="margin-right: 0.5rem; color: #3b82f6;">header</mat-icon>
+                Encabezado de la Página
+              </h3>
+              
+              <div class="form-grid" style="margin-top: 1rem;">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Título Principal</mat-label>
+                  <input matInput formControlName="titulo" placeholder="Ej: BROCAS TRICÓNICAS">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Descripción</mat-label>
+                  <textarea matInput formControlName="descripcion" rows="3" placeholder="Descripción del encabezado"></textarea>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- Breadcrumbs -->
+            <div class="full-width section-group" style="margin-top: 2rem;">
+              <h4 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                <mat-icon style="color: #3b82f6;">link</mat-icon>
+                Breadcrumbs (Migas de Pan)
+              </h4>
+              
+              <div formArrayName="breadcrumbs">
+                <div *ngFor="let _ of breadcrumbsArray.controls; let i = index; trackBy: trackByIndex" style="margin-bottom: 0.5rem;">
+                  <div style="display: flex; gap: 0.5rem; align-items: center;">
+                    <mat-form-field appearance="outline" style="flex: 1;">
+                      <mat-label>Miga #{{i + 1}}</mat-label>
+                      <input matInput [formControlName]="i" placeholder="Ej: PRODUCTOS">
+                    </mat-form-field>
+                    <button mat-icon-button color="warn" type="button" (click)="removeBreadcrumb(i)" matTooltip="Eliminar miga">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                
+                <button mat-raised-button type="button" (click)="addBreadcrumb()" style="margin-top: 0.5rem;">
+                  <mat-icon>add</mat-icon> Añadir miga de pan
+                </button>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </mat-tab>
+
+      <!-- ================= SECCIÓN DE INFORMACIÓN ================= -->
+      <mat-tab label="Sección de Información">
+        <mat-card class="tab-card">
+          <div class="form-grid" formGroupName="infoSection">
+            <div class="full-width section-group">
+              <h3>
+                <mat-icon style="margin-right: 0.5rem; color: #3b82f6;">info</mat-icon>
+                Sección Informativa
+              </h3>
+              
+              <div class="form-grid" style="margin-top: 1rem;">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Texto Informativo</mat-label>
+                  <textarea matInput formControlName="texto" rows="4" placeholder="Texto de la sección inferior"></textarea>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- Botón -->
+            <div class="full-width section-group" style="margin-top: 2rem;" formGroupName="boton">
+              <h4 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                <mat-icon style="color: #3b82f6;">smart_button</mat-icon>
+                Botón de Acción
+              </h4>
+              
+              <div class="form-grid" style="grid-template-columns: 1fr 1fr;">
+                <mat-form-field appearance="outline">
+                  <mat-label>Etiqueta del Botón</mat-label>
+                  <input matInput formControlName="label" placeholder="Ej: CONTÁCTANOS">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Link del Botón</mat-label>
+                  <input matInput formControlName="link" placeholder="Ej: /contacto">
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </mat-tab>
+
+      <!-- ================= PRODUCTOS ================= -->
+      <mat-tab label="Productos">
+        <mat-card class="tab-card">
+          <div class="form-grid">
+            <div class="full-width section-group">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3 style="display: flex; align-items: center; gap: 0.5rem; margin: 0;">
+                  <mat-icon style="color: #3b82f6;">inventory_2</mat-icon>
+                  Lista de Productos
+                </h3>
+                <button mat-raised-button type="button" (click)="addProduct()">
+                  <mat-icon>add</mat-icon> Añadir Producto
+                </button>
+              </div>
+              
+              <div formArrayName="products" class="products-grid">
+                <mat-expansion-panel *ngFor="let _ of productsArray.controls; let i = index; trackBy: trackByIndex" class="expansion-item">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      <mat-icon style="margin-right: 0.5rem; color: #3b82f6;">prod</mat-icon>
+                      {{ getProductTitle(i) || 'Producto #' + (i + 1) }}
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+
+                  <div [formGroupName]="i" class="form-grid">
+                    <mat-form-field appearance="outline" class="full-width">
+                      <mat-label>Título del Producto</mat-label>
+                      <input matInput formControlName="title" placeholder="Nombre del producto">
+                    </mat-form-field>
+
+                    <div class="full-width">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Imagen (URL actual)</mat-label>
+    <input matInput formControlName="image" placeholder="assets/products/bit1.png">
+  </mat-form-field>
+
+  <div class="upload-row">
+    <img *ngIf="productsArray.at(i).get('image')?.value"
+         [src]="productsArray.at(i).get('image')?.value"
+         style="height:80px; border-radius:4px; margin-bottom:8px; display:block;">
+
+    <input type="file" accept="image/*" (change)="onProductImageSelected(i, $event)">
+
+    <div class="dropzone"
+         (dragover)="onDragOver($event)"
+         (drop)="onDropProductImage(i, $event)">
+      <mat-icon>upload</mat-icon>
+      Arrastra aquí la imagen o selecciónala
+    </div>
+
+    <div class="filename" *ngIf="productImageFileName(i)">
+      <mat-icon>image</mat-icon> {{ productImageFileName(i) }}
+    </div>
+  </div>
+</div>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                      <mat-label>Link del Producto</mat-label>
+                      <input matInput formControlName="link" placeholder="/productos/broca">
+                    </mat-form-field>
+
+                    <div class="full-width" style="display: flex; justify-content: flex-end; margin-top: 1rem;">
+                      <button mat-raised-button color="warn" type="button" (click)="removeProduct(i)">
+                        <mat-icon>delete</mat-icon> Eliminar producto
+                      </button>
+                    </div>
+                  </div>
+                </mat-expansion-panel>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </mat-tab>
+    </mat-tab-group>
+  </form>
+
+  @if (showSuccessMessage) {
+    <div class="notification">
+      ✅ Producto general actualizado correctamente
+    </div>
+  }
+
+  <!-- Acciones principales -->
+    <!-- BOTONES ACCIONES -->
+  <div class="actions">
+    <button mat-raised-button color="warn" (click)="resetForm()">Cancelar</button>
+    <button mat-raised-button color="primary" (click)="saveChanges()">
+      <mat-icon>save</mat-icon> Guardar cambios
+    </button>
+  </div>
+</div>

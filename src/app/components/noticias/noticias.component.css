@@ -1,0 +1,62 @@
+.container { max-width: 700px; margin: 150px auto; font-family: sans-serif; }
+
+
+.category { color: #8888889f; font-size: 10px; }
+
+.title { 
+  font-size: 32px; 
+  font-weight: 800; 
+  text-transform: uppercase; 
+  margin: 10px 0;
+  line-height: 1.1;
+  color: #000000;
+}
+
+.date { 
+  color: #bbb; 
+  font-size: 13px; 
+  border-bottom: 1px solid #eee; 
+  padding-bottom: 20px; 
+  margin-bottom: 30px; 
+}
+
+.body-text { margin-bottom: 20px; line-height: 1.6; color: #333; }
+
+.contact a { color: #5bb28e; text-decoration: none; }
+
+.contact {
+  color: #333;
+}
+.signature { margin-top: 40px; }
+.signature .name {  margin-bottom: 2px; color: #333; }
+.signature .role { color: #333;  }
+
+
+@media (max-width: 700px){
+  .container{
+    padding: 0;
+    text-align: center;
+  }
+
+  .title {
+    font-size: 25px;
+  }
+
+  .content{
+    text-align: left;
+    margin: 10px 40px;
+    font-size: 12px;
+  }
+
+  .contact{
+    margin: 10px 40px;
+    text-align: left;
+    font-size: 12px;
+  }
+  .signature{
+    font-size: 12px;
+    margin: 0 40px;
+    text-align: left;
+  }
+  
+}

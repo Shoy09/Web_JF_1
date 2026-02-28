@@ -1,0 +1,297 @@
+/* ================= CONFIGURACIÓN GENERAL ================= */
+:host {
+  --primary-green: #5da05c;
+  --text-dark: #0b1d0b;
+  --text-grey: #666;
+  --font-titles: 'sans-serif';
+  --font-body: sans-serif;
+}
+/* ================= HERO SECTION (ESTILIZADO) ================= */
+
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center; 
+  justify-content: flex-start; 
+  text-align: left;
+  padding: 0 10%; 
+  z-index: 2;
+  margin-right: 700px;
+}
+
+.display-1 {
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+/* ================= HERO SECTION ================= */
+.hero-section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+
+
+.hero-section .hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ================= INFO SECTION ================= */
+.info-section {
+  color: #333;
+}
+
+.intro-container{
+  /* Eliminamos el padding de 2000px */
+  padding: 40px 200px; 
+  margin: 0 auto;
+
+}
+
+.main-heading {
+  font-size: 2.2rem;
+}
+
+.intro-body {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #555;
+  text-align: center;
+}
+
+.intro-body p {
+  margin-bottom: 20px;
+}
+
+.contact-btn {
+  display: inline-block;
+  margin-top: 20px;
+  text-decoration: none;
+  color: #4a7c59;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-bottom: 2px solid #4a7c59;
+  padding-bottom: 5px;
+  transition: opacity 0.3s;
+}
+
+.contact-btn:hover {
+  opacity: 0.7;
+}
+
+/* ================= TRUST CONTAINER ================= */
+/* ================= TRUST CONTAINER PRO ================= */
+.trust-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+  max-width: 1200px;
+  margin: 80px auto;
+  padding: 0 120px;
+}
+
+.trust-container.reverse {
+  flex-direction: row-reverse;
+}
+
+.trust-container p{
+  text-align: justify;
+  color: #555;
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+
+/* TEXTO */
+.text-content{
+  flex: 1;
+  max-width: 520px;
+}
+.text-content p{
+  text-align:left;
+}
+.text-content h3{
+  text-align: center;
+}
+
+.text-content .sub-heading {
+  font-size: 1.4rem;
+  font-weight: 900;
+  margin-bottom: 1px;
+  letter-spacing: -0.5px;
+  text-align: left;
+}
+
+/* IMAGEN */
+.image-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.image-content img {
+  width: 500px;
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+  transition: transform .3s ease;
+}
+
+.image-content img:hover {
+  transform: scale(1.02);
+}
+
+
+/* ================= BOTTOM BANNER ================= */
+.bottom-banner {
+  position: relative;
+  overflow: hidden;
+  min-height: 113vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 0;
+}
+
+.bottom-banner .banner-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  filter: brightness(0.8);
+}
+
+.bottom-banner .overlay-content {
+  position: relative;
+  z-index: 2;
+  color: #fff;
+  width: 100%;
+}
+
+.banner-title {
+  color: rgb(15, 15, 15);
+  font-size: 2rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.container-narrow p {
+  font-size: 13px;
+  line-height: 1.6;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.text-center {
+  text-align: center;
+  display: inline-block;
+  padding: 10px 200px;
+  border-radius: 12px;
+  margin: 0 auto;
+}
+.cen2 {
+  text-align: center;
+  display: block; /* Cambiado de inline-block para que ocupe todo el ancho */
+  padding: 40px 20px; /* Eliminamos el padding de 410px */
+}
+/* ================= RESPONSIVE ================= */
+/* ================= MOBILE STACK ================= */
+@media (max-width: 900px) {
+.text-center{
+  padding: 10px 20px;
+}
+
+  /* hero */
+  .display-1 {font-size: 2rem;}
+  .lead {font-size: 0.9rem;}
+
+  /* intro principal */
+  .main-heading{font-size: 1.4rem;}
+  .intro-body p{font-size: 0.8rem;}
+
+  /* sección con imagen */
+  .trust-container .sub-heading {
+    font-size: 1.2rem;  /* antes era 1.4rem */
+    text-align: justify; /* centrado en móviles */
+  }
+  .trust-container p {
+    font-size: 0.9rem;  /* un poco más pequeño que en desktop */
+    line-height: 1.5;   /* más compacto para móviles */
+    text-align: justify;  /* centrado para mejor lectura */
+  }
+
+  /* Banner final */
+  .bottom-banner .banner-title{
+    font-size: 1.6rem;
+  text-transform: none;
+    
+  }
+
+
+  /* BANNER FINAL */
+  .banner-bg  {display: none;}
+  .container-narrow {display: none;}
+}
+
+/* ================= RESPONSIVE FIX ================= */
+@media (max-width: 768px) {
+  .info-section {
+    padding: 60px 20px;
+    text-align: center;
+  }
+
+  .cen2 {
+    padding: 0;
+  }
+
+  .bottom-banner {
+    min-height: auto;
+    padding: 60px 20px;
+  }
+
+  /* 👇 Imagen primero */
+  .image-content {
+    order: -1;
+    width: 100%;
+  }  
+
+  /* 👇 Texto después */
+  .text-content {
+    flex-direction: column;
+    order: 1;
+    max-width: 100%;
+    text-align: center;
+  }
+  
+
+
+.trust-container, 
+  .trust-container.reverse {
+    flex-direction: column !important; /* Forzamos el orden vertical */
+    gap: 30px;
+    padding: 0 20px;
+  }
+
+  .overlay {
+    justify-content: center; /* Centra horizontalmente */
+    text-align: center;      /* Centra el texto */
+    padding: 0 180px;         /* Quita el padding del 10% */
+    background: rgba(0, 0, 0, 0.4); /* Fondo uniforme en móvil */
+  }
+}
+

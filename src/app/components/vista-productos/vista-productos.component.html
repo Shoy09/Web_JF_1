@@ -1,0 +1,83 @@
+<div class="page-container">
+
+  <main class="product-container">
+    <section class="product-info">
+      <nav class="breadcrumb">
+        <span *ngFor="let crumb of heroProduct.breadcrumbs; let last = last">
+          {{ crumb.label }}
+          <span *ngIf="!last"> / </span>
+        </span> 
+      </nav>
+      <div class="info-product">
+      <h1 class="product-title">
+        {{ heroProduct.title }} –
+        <br>
+        
+        <span>{{ heroProduct.subtitle }}</span>
+      </h1>
+
+      <div class="description">
+        <p *ngFor="let desc of heroProduct.descriptions">
+          {{ desc }}
+        </p>
+      </div>
+      </div>
+
+      <a [href]="heroProduct.contactLink" class="cta-link">
+        COMUNÍQUESE CON NOSOTROS
+      </a>
+    </section>
+
+    <section class="product-gallery">
+      <div class="main-image">
+        <img [src]="selectedImage" alt="Broca Ridgeback">
+      </div>
+
+      <div class="thumbnails">
+        <div 
+          *ngFor="let thumb of heroProduct.thumbnails" 
+          class="thumb" 
+          [class.active]="selectedImage === thumb"
+          (click)="changeImage(thumb)">
+          <img [src]="thumb" alt="Vista de producto">
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <section class="features-section">
+    <div class="features-grid-layout">
+      
+      <div class="features-content">
+        <h2>CARACTERÍSTICAS Y BENEFICIOS</h2>
+        
+        <div class="features-list">
+          <div class="feature-item" *ngFor="let feature of features">
+            <h4>&rarr; {{ feature.title }}</h4>
+            <p>{{ feature.description }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="downloads-content">
+        <h2>DESCARGABLES</h2>
+  <div class="download-card" *ngFor="let download of downloads">
+    <h3>{{ download.title }}</h3>
+          <div class="download-item">
+      <span>{{ download.description }}</span>
+      <!-- ✅ Agregar enlace de descarga -->
+      <a [href]="download.link" 
+         target="_blank" 
+         download
+         [class.disabled]="!download.link"
+         class="icon-download">
+        &#8595;
+      </a>
+    </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</div>

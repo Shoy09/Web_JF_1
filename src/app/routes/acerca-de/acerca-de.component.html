@@ -1,0 +1,19 @@
+<section class="about-hero">
+  <div class="container">
+    <h1>{{ aboutData.heroTitle }}</h1>
+  </div>
+</section>
+
+<section class="about-content">
+  <div class="container dos">
+    <p *ngFor="let paragraph of aboutData.paragraphs; let i = index">
+      {{ paragraph }}
+    </p>
+
+    <h1 *ngIf="aboutData.subtitle">{{ aboutData.subtitle }}</h1>
+
+    <p *ngFor="let paragraph2 of aboutData.paragraphs2; let i = index">
+      {{ paragraph2 }}
+    </p>
+  </div> 
+</section>

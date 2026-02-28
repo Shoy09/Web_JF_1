@@ -1,0 +1,153 @@
+/* =========================
+   HERO
+========================= */
+
+.history-hero {
+  height: 80vh;
+  background: url('/header-1.webp') center / cover no-repeat;
+  display: flex;
+  justify-content: center;
+    /* Asegura que el texto dentro del H1 también esté centrado */
+  text-align: center;
+  align-items: center;
+}
+
+.history-hero h1 {
+  color: #fff;
+  font-size: 42px;
+  letter-spacing: 2px;
+
+} 
+
+/* =========================
+   TIMELINE
+========================= */
+
+.timeline {
+  padding: 100px 180px;
+}
+
+/* ITEM BASE */
+.timeline-item {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 150px;
+  margin-bottom: 100px;
+}
+
+/* TEXTO */
+.timeline h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #000;
+}
+  
+
+.timeline p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #444;
+  max-width: 420px;
+}
+
+/* IMÁGENES */
+.timeline .media img {
+  width: 100%;
+  height: auto;
+}
+
+
+/* =========================
+   INTERCALADO AUTOMÁTICO
+========================= */
+
+/* ITEMS PARES → imagen a la izquierda */
+.timeline-item:nth-child(even) {
+  direction: rtl;
+}
+
+/* Corregimos contenido interno */
+.timeline-item:nth-child(even) .content,
+.timeline-item:nth-child(even) .media {
+  direction: ltr;
+}
+
+/* =========================
+   RESPONSIVE (Móvil)
+========================= */
+
+@media (max-width: 992px) {
+  /* 1. Ajustamos el contenedor principal para que no esté apretado */
+  .timeline {
+    padding: 40px 20px;
+  }
+
+  .timeline-container {
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .timeline-item {
+    /* 2. Cambiamos a flex-column para controlar el orden */
+    display: flex;
+    flex-direction: column; 
+    gap: 20px;
+    margin-bottom: 60px;
+    direction: ltr !important; /* Forzamos orden normal para todos */
+  }
+
+  /* 3. IMAGEN PRIMERO */
+  .timeline-item .media {
+    order: 1; /* Esto la pone arriba */
+    width: 100%;
+  }
+
+  /* 4. TEXTO SEGUNDO Y A LA IZQUIERDA */
+  .timeline-item .content {
+    order: 2; /* Esto lo pone abajo de la imagen */
+    width: 100%;
+    text-align: left; /* Alineado a la izquierda */
+  }
+
+  .timeline-item .story {
+    text-align: left;
+    margin-bottom: 20px;
+  }
+
+  .timeline p {
+    max-width: 100%; /* Que use todo el ancho disponible */
+    text-align: left;
+    margin-left: 0;
+  }
+
+  .timeline h3 {
+    text-align: left;
+  }
+
+  /* Reset de cualquier estilo intercalado que mueva el texto */
+  .timeline-item:nth-child(even) .content,
+  .timeline-item:nth-child(even) .media {
+    direction: ltr !important;
+    text-align: left;
+  }
+  .history-hero{
+    align-items: center;
+    justify-content: center; 
+  /* Asegura que el texto dentro del H1 también esté centrado */
+  text-align: center;
+  }
+
+  .history-hero h1{
+    font-size: 28px;
+  }
+
+  .content h3{
+    font-size: 20px;
+  }
+
+  .content p{
+    font-size: 12px;
+  }
+}

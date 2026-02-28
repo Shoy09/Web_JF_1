@@ -1,0 +1,23 @@
+<div class="container">
+
+  <div *ngIf="!editando" class="press-release">
+    <p class="category">{{ noticia.categoria }}</p>
+    <h1 class="title">{{ noticia.titulo }}</h1>
+    <p class="date">PUBLISHED — {{ noticia.fechaPublicacion }}</p>
+
+    <div class="content">
+      <p *ngFor="let p of noticia.parrafos" class="body-text">{{ p }}</p>
+    </div>
+
+    <div class="contact">
+      <p>For further information, please contact {{ noticia.contactoNombre }}</p>
+      <a [href]="'mailto:' + noticia.contactoEmail">{{ noticia.contactoEmail }}</a>
+    </div>
+
+    <div class="signature">
+      <p class="name">{{ noticia.firmaNombre }}</p>
+      <p class="role">{{ noticia.firmaCargo }}</p>
+    </div>
+  </div>
+
+</div>

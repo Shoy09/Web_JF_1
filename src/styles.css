@@ -1,0 +1,138 @@
+/* ==========================================================================
+   VARIABLES CSS - Configuración centralizada
+   ========================================================================== */
+:root {
+  /* ==========================================================================
+     COLORES
+     ========================================================================== */
+  --color-primary: #ffffff;
+  --color-text: #ffffff;
+
+  /* ==========================================================================
+     TIPOGRAFÍA
+     ========================================================================== */
+  /* Texto general y UI */
+  --font-family-base: 'Poppins', Arial, Helvetica, sans-serif;
+
+  /* Títulos, branding, secciones importantes */
+  --font-family-heading: 'Titillium Web', sans-serif;
+
+  /* Tamaños */
+  --font-size-base: 18px;
+  --line-height-base: 1.6;
+
+  /* ==========================================================================
+     ICONOS Y LOGO
+     ========================================================================== */
+  --icon-size-small: 22px;
+  --icon-size-medium: 30px;
+  --icon-size-large: 32px;
+  --logo-height: 84px;
+
+  /* ==========================================================================
+     EFECTOS
+     ========================================================================== */
+  --font-smoothing: antialiased;
+}
+
+
+/* ==========================================================================
+   RESET Y ESTILOS BASE
+   ========================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  background-color: var(--color-primary);
+  color: var(--color-text);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  -webkit-font-smoothing: var(--font-smoothing);
+  -moz-osx-font-smoothing: var(--font-smoothing);
+}
+
+/* ==========================================================================
+   COMPONENTES REUTILIZABLES
+   ========================================================================== */
+/* Elementos que comparten la misma fuente */
+.brand,
+.nav-links a,
+.search-input,
+button {
+  font-family: var(--font-family-primary);
+  -webkit-font-smoothing: var(--font-smoothing);
+  -moz-osx-font-smoothing: var(--font-smoothing);
+}
+
+.search-input {
+  font-family: var(--font-family-primary);
+}
+
+/* ==========================================================================
+   ICONOS - Sistema de tamaños consistente
+   ========================================================================== */
+/* Regla general para iconos */
+img[src*="icon"] {
+  display: block;
+}
+
+/* Componente: Logo */
+.logo {
+  width: auto;
+  height: var(--logo-height);
+}
+
+/* Componente: Menú */
+.menu-icon img {
+  width: var(--icon-size-large);
+  height: var(--icon-size-large);
+}
+
+/* Componente: Búsqueda */
+.search-icon img {
+  width: var(--icon-size-medium);
+  height: var(--icon-size-medium);
+}
+
+/* Componente: Idioma */
+.language-toggle img {
+  width: var(--icon-size-small);
+  height: var(--icon-size-small);
+}
+
+/* ==========================================================================
+   MEDIA QUERIES - Responsive design
+   ========================================================================== */
+@media (max-width: 768px) {
+  :root {
+    --font-size-base: 16px;
+    --logo-height: 70px;
+    --icon-size-large: 28px;
+    --icon-size-medium: 26px;
+    --icon-size-small: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --font-size-base: 14px;
+    --logo-height: 60px;
+    --icon-size-large: 24px;
+    --icon-size-medium: 22px;
+  }
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

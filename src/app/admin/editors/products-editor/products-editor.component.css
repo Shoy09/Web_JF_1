@@ -1,0 +1,461 @@
+/* product-editor.component.css */
+
+.editor-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e5e7eb;
+}
+
+/* HEADER */
+h1 {
+  color: #111827;
+  font-size: 2rem;
+  font-weight: 500;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 3px solid #059669;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-badge {
+  background-color: #059669;
+  color: #ffffff;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+/* TABS */
+::ng-deep .mat-tab-group {
+  margin-bottom: 2rem;
+}
+
+::ng-deep .mat-tab-label {
+  color: #4b5563 !important;
+  font-weight: 500;
+  opacity: 1 !important;
+}
+
+::ng-deep .mat-tab-label-active {
+  color: #059669 !important;
+  font-weight: 600;
+}
+
+::ng-deep .mat-ink-bar {
+  background-color: #059669 !important;
+  height: 3px !important;
+}
+
+/* CARDS */
+.tab-card {
+  padding: 2rem !important;
+  margin: 1rem 0;
+  background-color: #f9fafb !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  border: 1px solid #e5e7eb;
+}
+
+.tab-card h3 {
+  color: #111827;
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin: 0 0 1.5rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #059669;
+  display: inline-block;
+}
+
+/* FORM FIELDS - WHITE THEME */
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+  color: #d1d5db !important;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline-thick {
+  color: #9ca3af !important;
+}
+
+::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+  color: #059669 !important;
+}
+
+::ng-deep .mat-form-field-label {
+  color: #6b7280 !important;
+}
+
+::ng-deep .mat-focused .mat-form-field-label {
+  color: #059669 !important;
+}
+
+::ng-deep .mat-input-element {
+  color: #111827 !important;
+  caret-color: #059669 !important;
+}
+
+::ng-deep textarea.mat-input-element {
+  line-height: 1.6;
+  color: #111827 !important;
+  min-height: 80px;
+}
+
+/* FORM GRID */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin: 1rem 0;
+}
+
+/* FLEX ROW */
+.flex-row {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
+}
+
+.flex-row:hover {
+  border-color: #059669;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.1);
+}
+
+.flex-row .full-width {
+  flex: 1;
+}
+
+.flex-row button {
+  margin-top: 0.5rem;
+}
+
+/* CARD EDITOR */
+.card-editor {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
+}
+
+.card-editor:hover {
+  border-color: #059669;
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.1);
+}
+
+.card-editor hr {
+  margin: 1.5rem 0 0 0;
+  border: none;
+  border-top: 2px dashed #e5e7eb;
+}
+
+/* UPLOAD SECTION */
+.upload-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.dropzone {
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  color: #6b7280;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: #f9fafb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dropzone:hover {
+  border-color: #059669;
+  color: #059669;
+  background-color: #f0fdf4;
+}
+
+.dropzone mat-icon {
+  color: #059669;
+  font-size: 2rem;
+  width: 2rem;
+  height: 2rem;
+}
+
+.filename {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background-color: #f0fdf4;
+  border-radius: 8px;
+  border: 1px solid #059669;
+  color: #059669;
+  font-size: 0.9rem;
+}
+
+.filename mat-icon {
+  color: #059669;
+  font-size: 1.2rem;
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+/* BUTTONS */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 2px solid #e5e7eb;
+}
+
+button[mat-raised-button] {
+  font-weight: 500 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease !important;
+  min-width: 140px !important;
+  padding: 0.5rem 1.5rem !important;
+}
+
+button[mat-raised-button][color="primary"] {
+  background-color: #059669 !important;
+  color: #ffffff !important;
+  border: 1px solid #059669 !important;
+}
+
+button[mat-raised-button][color="primary"]:hover:not(:disabled) {
+  background-color: #047857 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2) !important;
+}
+
+button[mat-raised-button][color="warn"] {
+  background-color: #ffffff !important;
+  color: #dc2626 !important;
+  border: 1px solid #dc2626 !important;
+}
+
+button[mat-raised-button][color="warn"]:hover {
+  background-color: #dc2626 !important;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2) !important;
+}
+
+button[mat-icon-button] {
+  color: #059669 !important;
+}
+
+button[mat-icon-button][color="warn"] {
+  color: #dc2626 !important;
+}
+
+button[mat-icon-button]:hover {
+  background-color: rgba(5, 150, 105, 0.1) !important;
+}
+
+button[mat-icon-button][color="warn"]:hover {
+  background-color: rgba(220, 38, 38, 0.1) !important;
+}
+
+/* ADD BUTTONS */
+button[mat-raised-button][color="primary"]:not(.actions button) {
+  margin: 0.5rem 0;
+  background-color: #ffffff !important;
+  color: #059669 !important;
+  border: 2px dashed #d1d5db !important;
+  width: 100%;
+  padding: 1rem !important;
+}
+
+button[mat-raised-button][color="primary"]:not(.actions button):hover {
+  border-color: #059669 !important;
+  background-color: #f0fdf4 !important;
+  transform: translateY(-2px);
+}
+
+button[mat-raised-button] mat-icon {
+  margin-right: 0.5rem;
+  color: inherit;
+}
+
+/* NOTIFICATION */
+.notification {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background-color: #059669;
+  color: #ffffff;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid #047857;
+  animation: slideIn 0.3s ease;
+  z-index: 1000;
+  font-weight: 500;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* FULL WIDTH UTILITY */
+.full-width {
+  width: 100%;
+}
+
+/* PLACEHOLDER COLOR */
+::ng-deep .mat-input-element::placeholder {
+  color: #9ca3af !important;
+}
+
+::ng-deep .mat-form-field.mat-focused .mat-input-element::placeholder {
+  color: #6b7280 !important;
+}
+
+/* TOOLTIP */
+::ng-deep .mat-tooltip {
+  background-color: #1f2937 !important;
+  color: #ffffff !important;
+  font-size: 0.85rem !important;
+  padding: 0.5rem 0.75rem !important;
+  border-radius: 4px !important;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .editor-container {
+    margin: 1rem;
+    padding: 1rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .flex-row {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.75rem;
+  }
+
+  .flex-row button {
+    align-self: flex-end;
+    margin-top: 0;
+  }
+
+  .card-editor {
+    padding: 1rem;
+  }
+
+  .actions {
+    flex-direction: column-reverse;
+  }
+
+  .actions button {
+    width: 100%;
+    min-width: unset !important;
+  }
+
+  .notification {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    text-align: center;
+  }
+
+  .dropzone {
+    padding: 1.5rem 1rem;
+  }
+
+  button[mat-raised-button][color="primary"]:not(.actions button) {
+    padding: 0.75rem !important;
+  }
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #059669;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #047857;
+}
+
+/* ADDITIONAL WHITE THEME ADJUSTMENTS */
+::ng-deep .mat-form-field-underline {
+  background-color: #e5e7eb !important;
+}
+
+::ng-deep .mat-form-field-ripple {
+  background-color: #059669 !important;
+}
+
+/* CARD EDITOR BUTTON */
+.card-editor button[mat-raised-button][color="warn"] {
+  margin-top: 1rem;
+  width: 100%;
+}
+
+/* HR STYLING */
+.card-editor hr {
+  margin-top: 1.5rem;
+}
+
+/* FEATURES AND DOWNLOADS SPECIFIC */
+.card-editor .form-grid {
+  margin-bottom: 0.5rem;
+}
+
+/* UPLOAD ROW ICONS */
+.upload-row mat-icon {
+  color: #059669;
+}

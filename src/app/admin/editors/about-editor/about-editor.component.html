@@ -1,0 +1,182 @@
+<!-- about-editor.component.html -->
+<div class="editor-container">
+  <h1>
+    <span></span>
+    Editor Acerca De
+    <span class="header-badge">Sobre Nosotros</span>
+  </h1>
+
+  <form [formGroup]="aboutForm">
+    <mat-tab-group animationDuration="300ms" [dynamicHeight]="true">
+      <!-- ================= HERO SECTION ================= -->
+      <mat-tab label="Hero Section">
+        <mat-card class="tab-card">
+          <div class="form-grid">
+            <div class="full-width section-group">
+              <h3>
+                <mat-icon style="margin-right: 0.5rem; color: #3b82f6;">slideshow</mat-icon>
+                Sección Hero
+              </h3>
+              
+              <div class="form-grid" style="margin-top: 1rem;" formGroupName="hero">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Título Principal</mat-label>
+                  <input matInput formControlName="title" placeholder="Sobre Nosotros, Nuestra Historia...">
+                  <mat-hint align="end">{{ getCharacterCount(heroTitleControl) }}/100</mat-hint>
+                  <mat-error *ngIf="heroTitleControl?.errors?.['required']">
+                    El título es requerido
+                  </mat-error>
+                  <mat-error *ngIf="heroTitleControl?.errors?.['maxlength']">
+                    Máximo 100 caracteres
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </mat-tab>
+
+      <!-- ================= SUBTÍTULO ================= -->
+      <mat-tab label="Subtítulo">
+        <mat-card class="tab-card">
+          <div class="form-grid">
+            <div class="full-width section-group">
+              <h3>
+                <mat-icon style="margin-right: 0.5rem; color: #3b82f6;">title</mat-icon>
+                Subtítulo Decorativo
+              </h3>
+              
+              <div class="form-grid" style="margin-top: 1rem;" formGroupName="subtitle">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Subtítulo</mat-label>
+                  <input matInput formControlName="text" placeholder="Nuestra Misión, Valores, Equipo...">
+                  <mat-hint align="end">{{ getCharacterCount(subtitleTextControl) }}/200</mat-hint>
+                  <mat-error *ngIf="subtitleTextControl?.errors?.['maxlength']">
+                    Máximo 200 caracteres
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </mat-tab>
+
+      <!-- ================= PÁRRAFOS PRINCIPALES ================= -->
+      <mat-tab label="Párrafos Principales">
+        <mat-card class="tab-card">
+          <div class="form-grid">
+            <div class="full-width section-group">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3 style="display: flex; align-items: center; gap: 0.5rem; margin: 0;">
+                  <mat-icon style="color: #3b82f6;">article</mat-icon>
+                  Párrafos Principales
+                </h3>
+                <button mat-raised-button type="button" (click)="addParagraph()">
+                  <mat-icon>add</mat-icon> Agregar párrafo
+                </button>
+              </div>
+              
+              <div formArrayName="paragraphs">
+                <mat-expansion-panel *ngFor="let p of paragraphsArray.controls; let i = index; trackBy: trackByIndex" class="expansion-item">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      <mat-icon style="margin-right: 0.5rem; color: #3b82f6;">notes</mat-icon>
+                      {{ getParagraphPreview(paragraphsArray.at(i)) || 'Párrafo #' + (i + 1) }}
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+
+                  <div class="form-grid">
+                    <mat-form-field appearance="outline" class="full-width">
+                      <mat-label>Contenido del párrafo {{ i + 1 }}</mat-label>
+                      <textarea matInput [formControlName]="i" rows="4" placeholder="Escribe el contenido del párrafo..."></textarea>
+                      <mat-hint align="end">{{ getCharacterCount(paragraphsArray.at(i)) }}/500</mat-hint>
+                      <mat-error *ngIf="paragraphsArray.at(i).errors?.['required']">
+                        Este párrafo es requerido
+                      </mat-error>
+                      <mat-error *ngIf="paragraphsArray.at(i).errors?.['maxlength']">
+                        Máximo 500 caracteres
+                      </mat-error>
+                    </mat-form-field>
+
+                    <div class="full-width" style="display: flex; justify-content: flex-end; margin-top: 1rem;">
+                      <button mat-raised-button color="warn" type="button" (click)="removeParagraph(i)" *ngIf="paragraphsArray.length > 1">
+                        <mat-icon>delete</mat-icon> Eliminar párrafo
+                      </button>
+                    </div>
+                  </div>
+                </mat-expansion-panel>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </mat-tab>
+
+      <!-- ================= PÁRRAFOS SECUNDARIOS ================= -->
+      <mat-tab label="Párrafos Secundarios">
+        <mat-card class="tab-card">
+          <div class="form-grid">
+            <div class="full-width section-group">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3 style="display: flex; align-items: center; gap: 0.5rem; margin: 0;">
+                  <mat-icon style="color: #3b82f6;">notes</mat-icon>
+                  Párrafos Secundarios
+                </h3>
+                <button mat-raised-button type="button" (click)="addParagraph2()">
+                  <mat-icon>add</mat-icon> Agregar párrafo
+                </button>
+              </div>
+              
+              <div formArrayName="paragraphs2">
+                <mat-expansion-panel *ngFor="let p of paragraphs2Array.controls; let i = index; trackBy: trackByIndex" class="expansion-item">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      <mat-icon style="margin-right: 0.5rem; color: #3b82f6;">description</mat-icon>
+                      {{ getParagraphPreview(paragraphs2Array.at(i)) || 'Párrafo secundario #' + (i + 1) }}
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+
+                  <div class="form-grid">
+                    <mat-form-field appearance="outline" class="full-width">
+                      <mat-label>Contenido del párrafo secundario {{ i + 1 }}</mat-label>
+                      <textarea matInput [formControlName]="i" rows="3" placeholder="Escribe el contenido del párrafo secundario..."></textarea>
+                      <mat-hint align="end">{{ getCharacterCount(paragraphs2Array.at(i)) }}/500</mat-hint>
+                      <mat-error *ngIf="paragraphs2Array.at(i).errors?.['maxlength']">
+                        Máximo 500 caracteres
+                      </mat-error>
+                    </mat-form-field>
+
+                    <div class="full-width" style="display: flex; justify-content: flex-end; margin-top: 1rem;">
+                      <button mat-raised-button color="warn" type="button" (click)="removeParagraph2(i)">
+                        <mat-icon>delete</mat-icon> Eliminar párrafo
+                      </button>
+                    </div>
+                  </div>
+                </mat-expansion-panel>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </mat-tab>
+    </mat-tab-group>
+  </form>
+
+  @if (showSuccessMessage) {
+    <div class="notification">
+      ✅ Acerca de actualizado correctamente
+    </div>
+  }
+
+  @if (showErrorMessage) {
+    <div class="notification error">
+      ❌ Error al guardar. Complete todos los campos requeridos.
+    </div>
+  }
+
+    <!-- BOTONES ACCIONES -->
+  <div class="actions">
+    <button mat-raised-button color="warn" (click)="resetForm()">Cancelar</button>
+    <button mat-raised-button color="primary" (click)="saveChanges()">
+      <mat-icon>save</mat-icon> Guardar cambios
+    </button>
+  </div>
+</div>

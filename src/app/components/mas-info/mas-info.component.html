@@ -1,0 +1,77 @@
+<div class="terelion-container" *ngIf="heroSection">
+
+  <!-- HERO -->
+  <section class="hero-section">
+    <img [src]="heroSection.imagenFondo" class="hero-img" />
+    <div class="overlay">
+      <div class="container">
+        <h1 class="display-1">{{ heroSection.titulo }}</h1>
+        <p class="lead">{{ heroSection.subtitulo }}</p>
+      </div>
+    </div>
+  </section>
+
+<section class="info-section">
+
+  <!-- INTRO PRINCIPAL -->
+  <div class="intro-container text-center" *ngIf="contentSections.length">
+    <h2 class="main-heading">{{ contentSections[0].titulo }}</h2>
+
+    <div class="intro-body">
+      <p *ngFor="let p of contentSections[0]?.parrafos">
+        {{ p }}
+      </p>
+
+      <div class="action-link" *ngIf="heroSection.boton">
+        <a class="contact-btn" [routerLink]="heroSection.boton.url">
+          {{ heroSection.boton.label }}
+        </a>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- TODAS LAS SECCIONES (content + info juntas en secuencia) -->
+  <ng-container *ngFor="let section of getAllSections(); let i = index">
+
+    <div class="trust-container" [class.reverse]="i % 2 !== 0">
+
+      <!-- TEXTO -->
+      <div class="text-content">
+        <h3 class="sub-heading">{{ section.titulo }}</h3>
+
+        <p *ngFor="let p of section.parrafos">
+          {{ p }}
+        </p>
+      </div>
+
+      <!-- IMAGEN -->
+      <div 
+  *ngIf="section.imagen"
+  class="image-content">
+        
+        <img [src]="section.imagen" [alt]="section.titulo" />
+      </div>
+
+    </div>
+
+  </ng-container>
+
+</section>
+
+  <!-- BANNER FINAL -->
+  <section class="bottom-banner" *ngIf="bottomBanner">
+    <img [src]="bottomBanner.imagen" class="banner-bg show-for-large" />
+
+    <div class="overlay-content  cen2">
+      <h2 class="banner-title">{{ bottomBanner.titulo }}</h2>
+
+      <div class="container-narrow">
+        <p>{{ bottomBanner.texto }}</p>
+
+
+      </div>
+    </div>
+  </section>
+
+</div>

@@ -1,0 +1,40 @@
+<div class="page-container">
+
+  <!-- HEADER -->
+  <header class="section-header">
+    <div class="breadcrumbs">
+      <span *ngFor="let crumb of headerData.breadcrumbs; let last = last">
+        {{ crumb }}<span *ngIf="!last"> / </span>
+      </span>
+    </div>
+
+    <div class="header-content">
+      <h1 class="main-title">{{ headerData.titulo }}</h1>
+      <p class="header-description">{{ headerData.descripcion }}</p>
+    </div>
+  </header>
+
+  <!-- GRID DE PRODUCTOS -->
+  <section class="products-grid">
+    <div class="product-card" *ngFor="let product of products">
+      <div class="card-image">
+        <img [src]="product.image" [alt]="product.title" class="product-img">
+      </div>
+      
+      <div class="card-content">
+        <h3 class="product-title">{{ product?.title }}</h3>
+        <a [href]="product.link" class="view-link">VER</a>
+      </div>
+    </div>
+  </section>
+
+<!-- SECCIÓN INFORMACIÓN -->
+<section class="info-section text-center">
+  <p>{{ infoSection.texto }}</p>
+  
+  <a [href]="infoSection.boton.link" class="contact-btn">
+    {{ infoSection.boton.label }}
+  </a>
+</section>
+
+</div>

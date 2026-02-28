@@ -1,0 +1,164 @@
+/* ================= VARIABLES & GENERAL ================= */
+:host {
+  display: block;
+  font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+  color: #333;
+  --primary-green: #549e52; /* Verde Terelion */
+  --text-dark: #111;
+  --text-grey: #888;
+}
+
+.page-container {
+  max-width: 1400px;
+  margin: 90px auto 0;
+  padding: 40px 50px;
+}
+
+/* ================= 1. HEADER ================= */
+.section-header {
+  margin-bottom: 60px;
+}
+
+.breadcrumbs {
+  font-size: 12px;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end; /* Alinea el texto a la base del título */
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+.main-title {
+  font-size: 64px; /* Tamaño gigante como la imagen */
+  font-weight: 900; /* Extra bold */
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 0.9;
+  color: var(--text-dark);
+  letter-spacing: -2px; /* Letras pegadas para efecto "Impact" */
+  flex: 1;
+  min-width: 300px;
+}
+
+.header-description {
+  max-width: 400px;
+  text-align: right;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #555;
+  margin: 0;
+}
+
+/* ================= 2. GRID PRODUCTOS ================= */
+.products-grid {
+  display: grid;
+  /* Crea columnas automáticas de mínimo 280px */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+  gap: 30px;
+  margin-bottom: 80px;
+}
+
+.product-card {
+  background: #fff;
+  border: 1px solid #eee; /* Borde muy sutil */
+  padding: 40px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px); /* Efecto elevación suave */
+  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+.card-image img {
+  height: 180px; /* Altura fija para que todas se vean igual */
+  object-fit: contain;
+  margin-bottom: 30px;
+}
+
+.product-title {
+  font-size: 24px;
+  font-weight: 800; /* Fuente gruesa */
+  text-transform: uppercase;
+  line-height: 1.1;
+  color: var(--text-dark);
+  margin-bottom: 40px; /* Espacio antes del botón VIEW */
+  letter-spacing: -0.5px;
+  flex-grow: 1; /* Empuja el botón VIEW hacia abajo si el título es corto */
+}
+
+/* El link "VIEW" */
+.view-link {
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--primary-green);
+  text-decoration: none;
+  border-bottom: 2px solid var(--primary-green); /* Subrayado verde grueso */
+  padding-bottom: 2px;
+  align-self: flex-start; /* Alineado a la izquierda como en la foto */
+  transition: opacity 0.2s;
+}
+
+.view-link:hover {
+  opacity: 0.7;
+}
+
+/* ================= 3. INFO SECTION ================= */
+.info-section {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 60px auto;
+  padding: 40px 0;
+  border-top: 1px solid #eee; /* Línea divisoria opcional arriba */
+}
+
+.info-section p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #444;
+  margin-bottom: 40px;
+}
+
+/* Botón CONTACT US */
+.contact-btn {
+  font-size: 20px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--primary-green);
+  text-decoration: none;
+  border-bottom: 3px solid var(--primary-green);
+  padding-bottom: 3px;
+  transition: color 0.2s;
+}
+
+.contact-btn:hover {
+  color: #3d7a3b;
+  border-color: #3d7a3b;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .page-container { 
+    padding: 20px; 
+    margin: 90px auto 0;
+  }
+  
+  .header-content { flex-direction: column; align-items: flex-start; gap: 20px; }
+  .header-description { text-align: left; max-width: 100%; }
+  .main-title { font-size: 42px; }
+  
+  .view-link { align-self: center; } /* En móvil centramos el botón VIEW */
+}

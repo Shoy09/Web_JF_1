@@ -1,0 +1,57 @@
+<!-- OVERLAY GLOBAL -->
+<div
+  class="language-overlay"
+  *ngIf="dropdownOpen"
+  (click)="closeDropdown()"
+></div>
+ 
+<section class="hero">
+  <div class="content">
+    <h1>
+      <span *ngFor="let line of hero.titleLines">{{ line }}</span>
+    </h1>
+    <br>
+    <button class="btn-primary" [routerLink]="hero.buttonLink">{{ hero.buttonText }}</button>
+  </div>
+</section>
+ 
+<!-- CARDS SECTION -->
+<section class="cards-section"> 
+  <div class="cards-container">
+
+    <!-- Cards dinámicas -->
+    <div 
+      *ngFor="let card of cards" 
+      class="card" 
+      [ngClass]="{
+        'card-history': card.type === 'history', 
+        'card-product': card.type === 'product'
+      }"
+    > 
+      <div 
+        class="card-image" 
+        [style.background-image]="'url(' + card.image + ')'"
+      >
+        <div class="card-overlay"></div>
+      </div>
+      <div class="card-content">
+        <h3>{{ card.title }}</h3>
+        <button class="btn-card">{{ card.buttonText }}</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ABOUT SECTION -->
+<section class="about-section">
+  <div class="about-container">
+    <h2>{{ about.title }}</h2>
+    <p *ngFor="let paragraph of about.paragraphs">
+      {{ paragraph }}
+    </p>
+    <a [href]="about.linkUrl" class="learn-more-link" [routerLink]="about.linkUrl">
+      {{ about.linkText }}
+    </a>
+  </div>
+</section>

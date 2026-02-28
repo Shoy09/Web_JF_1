@@ -1,0 +1,234 @@
+<div class="editor-container">
+
+  <h1>
+    <span></span>
+    Editor de Producto
+    <span class="header-badge">Productos</span>
+  </h1>
+
+  <mat-tab-group animationDuration="300ms" [dynamicHeight]="true">
+
+    <!-- TAB: Principal -->
+    <mat-tab label="Principal">
+      <mat-card class="tab-card">
+        <h3>Información principal</h3>
+
+        <div class="form-grid">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Título</mat-label>
+            <input matInput [(ngModel)]="product.title" name="title">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Subtítulo</mat-label>
+            <input matInput [(ngModel)]="product.subtitle" name="subtitle">
+          </mat-form-field>
+        </div>
+
+        <!-- Imagen principal con upload -->
+        <div class="full-width">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Imagen principal (URL actual)</mat-label>
+            <input matInput [(ngModel)]="product.mainImage" name="mainImage">
+          </mat-form-field>
+
+          <div class="upload-row">
+            <img *ngIf="product.mainImage"
+                 [src]="product.mainImage"
+                 style="height:80px; border-radius:4px; margin-bottom:8px; display:block;">
+
+            <input #mainImageInput type="file" accept="image/*"
+                   style="display:none"
+                   (change)="onMainImageSelected($event)">
+
+            <div class="dropzone"
+                 (click)="mainImageInput.click()"
+                 (dragover)="onDragOver($event)"
+                 (drop)="onDropMainImage($event)"
+                 style="cursor:pointer;">
+              <mat-icon>upload</mat-icon>
+              Haz clic o arrastra la imagen aquí
+            </div>
+
+            <div class="filename" *ngIf="mainImageFileName()">
+              <mat-icon>image</mat-icon> {{ mainImageFileName() }}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-grid" style="margin-top: 1rem;">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Link contacto</mat-label>
+            <input matInput [(ngModel)]="product.contactLink" name="contactLink">
+          </mat-form-field>
+        </div>
+      </mat-card>
+    </mat-tab>
+
+    <!-- TAB: Descripciones -->
+    <mat-tab label="Descripciones">
+      <mat-card class="tab-card">
+        <h3>Descripciones</h3>
+
+        <div *ngFor="let d of product.descriptions; let i = index; trackBy: trackByIndex" class="flex-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Descripción {{i + 1}}</mat-label>
+            <textarea matInput [(ngModel)]="product.descriptions[i]" rows="3" [name]="'desc' + i"></textarea>
+          </mat-form-field>
+          <button mat-icon-button color="warn" (click)="removeDescription(i)" matTooltip="Eliminar descripción">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+
+        <button mat-raised-button color="primary" (click)="addDescription()">
+          <mat-icon>add</mat-icon> Agregar descripción
+        </button>
+      </mat-card>
+    </mat-tab>
+
+    <!-- TAB: Thumbnails -->
+    <mat-tab label="Thumbnails">
+      <mat-card class="tab-card">
+        <h3>Imágenes miniatura</h3>
+
+        <div *ngFor="let t of product.thumbnails; let i = index; trackBy: trackByIndex" class="card-editor">
+          <div class="full-width">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>URL imagen {{i + 1}}</mat-label>
+              <input matInput [(ngModel)]="product.thumbnails[i]" [name]="'thumb' + i">
+            </mat-form-field>
+
+            <div class="upload-row">
+              <img *ngIf="product.thumbnails[i]"
+                   [src]="product.thumbnails[i]"
+                   style="height:80px; border-radius:4px; margin-bottom:8px; display:block;">
+
+              <input #thumbInput type="file" accept="image/*"
+                     style="display:none"
+                     (change)="onThumbnailSelected(i, $event)">
+
+              <div class="dropzone"
+                   (click)="thumbInput.click()"
+                   (dragover)="onDragOver($event)"
+                   (drop)="onDropThumbnail(i, $event)"
+                   style="cursor:pointer;">
+                <mat-icon>upload</mat-icon>
+                Haz clic o arrastra la imagen aquí
+              </div>
+
+              <div class="filename" *ngIf="thumbnailFileName(i)">
+                <mat-icon>image</mat-icon> {{ thumbnailFileName(i) }}
+              </div>
+            </div>
+          </div>
+
+          <button mat-icon-button color="warn" (click)="removeThumbnail(i)" matTooltip="Eliminar imagen">
+            <mat-icon>delete</mat-icon>
+          </button>
+          <hr>
+        </div>
+
+        <button mat-raised-button color="primary" (click)="addThumbnail()">
+          <mat-icon>add</mat-icon> Agregar imagen
+        </button>
+      </mat-card>
+    </mat-tab>
+
+    <!-- TAB: Features -->
+    <mat-tab label="Features">
+      <mat-card class="tab-card">
+        <h3>Características</h3>
+
+        <div *ngFor="let f of product.features || []; let i = index; trackBy: trackByIndex" class="card-editor">
+          <div class="form-grid">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Título</mat-label>
+              <input matInput [(ngModel)]="product.features![i].title" [name]="'featTitle' + i">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Descripción</mat-label>
+              <input matInput [(ngModel)]="product.features![i].description" [name]="'featDesc' + i">
+            </mat-form-field>
+          </div>
+          <button mat-raised-button color="warn" (click)="removeFeature(i)">
+            <mat-icon>delete</mat-icon> Eliminar feature
+          </button>
+          <hr>
+        </div>
+
+        <button mat-raised-button color="primary" (click)="addFeature()">
+          <mat-icon>add</mat-icon> Agregar feature
+        </button>
+      </mat-card>
+    </mat-tab>
+
+    <!-- TAB: Descargables -->
+    <mat-tab label="Descargables">
+      <mat-card class="tab-card">
+        <h3>Archivos descargables</h3>
+
+        <div *ngFor="let d of product.downloads || []; let i = index; trackBy: trackByIndex" class="card-editor">
+          <div class="form-grid">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Título</mat-label>
+              <input matInput [(ngModel)]="product.downloads![i].title" [name]="'dlTitle' + i">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Descripción</mat-label>
+              <input matInput [(ngModel)]="product.downloads![i].description" [name]="'dlDesc' + i">
+            </mat-form-field>
+          </div>
+
+          <div *ngIf="product.downloads![i].link" style="margin-bottom: 0.5rem;">
+            <a [href]="product.downloads![i].link" target="_blank" style="font-size:0.85rem; color:#3b82f6;">
+              <mat-icon style="vertical-align:middle; font-size:1rem;">picture_as_pdf</mat-icon>
+              Ver PDF actual
+            </a>
+          </div>
+
+          <div class="upload-row">
+            <input #pdfInput type="file" accept="application/pdf"
+                   style="display:none"
+                   (change)="onFileSelected(i, $event)">
+
+            <div class="dropzone"
+                 (click)="pdfInput.click()"
+                 (dragover)="onDragOver($event)"
+                 (drop)="onDropFile(i, $event)"
+                 style="cursor:pointer;">
+              <mat-icon>upload_file</mat-icon>
+              Haz clic o arrastra el PDF aquí
+            </div>
+
+            <div class="filename" *ngIf="fileName(i)">
+              <mat-icon>picture_as_pdf</mat-icon> {{ fileName(i) }}
+            </div>
+          </div>
+
+          <button mat-raised-button color="warn" (click)="removeDownload(i)" style="margin-top:0.5rem;">
+            <mat-icon>delete</mat-icon> Eliminar descargable
+          </button>
+          <hr>
+        </div>
+
+        <button mat-raised-button color="primary" (click)="addDownload()">
+          <mat-icon>add</mat-icon> Agregar descargable
+        </button>
+      </mat-card>
+    </mat-tab>
+
+  </mat-tab-group>
+
+  <!-- BOTONES ACCIONES -->
+  <div class="actions">
+    <button mat-raised-button color="warn" (click)="resetForm()">Cancelar</button>
+    <button mat-raised-button color="primary" (click)="save()">
+      <mat-icon>save</mat-icon> Guardar cambios
+    </button>
+  </div>
+
+  <div *ngIf="showSuccessMessage" class="notification">
+    ✅ Producto actualizado correctamente
+  </div>
+
+</div>
