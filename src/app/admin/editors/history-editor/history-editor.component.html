@@ -1,3 +1,4 @@
+<!-- history-editor.component.html -->
 <div class="editor-container">
 
   <!-- HEADER -->
@@ -38,15 +39,48 @@
             </mat-expansion-panel-header>
 
             <div class="form-grid" style="margin-top: 1rem;">
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Imagen</mat-label>
-                <input matInput [(ngModel)]="t.image" [name]="'tImg' + i" placeholder="URL de la imagen">
-              </mat-form-field>
+              
+              <!-- Imagen del Timeline -->
+              <div class="full-width section-group">
+                <h4 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                  <mat-icon style="color: #3b82f6;">image</mat-icon>
+                  Imagen
+                </h4>
+                
+                <div class="upload-row">
+                  <!-- Preview -->
+                  <img *ngIf="timelineImagePreviews[i]"
+                       [src]="timelineImagePreviews[i]"
+                       style="height: 100px; border-radius: 4px; margin-bottom: 8px; display: block; object-fit: cover;">
+                  
+                  <!-- Input file -->
+                  <input type="file" accept="image/*" 
+                         (change)="onTimelineImageSelected(i, $event)" 
+                         style="display: none;" 
+                         [id]="'timelineImageInput-' + i">
+                  
+                  <!-- Dropzone -->
+                  <div class="dropzone" 
+                       (dragover)="onDragOver($event)" 
+                       (drop)="onTimelineImageDrop(i, $event)"
+                       (click)="selectFileById('timelineImageInput-' + i)"
+                       style="cursor: pointer;">
+                    <mat-icon>cloud_upload</mat-icon>
+                    <span>Arrastra la imagen aquí o haz clic</span>
+                  </div>
+
+                  <!-- Nombre del archivo -->
+                  <div class="filename" *ngIf="timelineImageFileNames[i]">
+                    <mat-icon>image</mat-icon> {{ timelineImageFileNames[i] }}
+                  </div>
+                </div>
+              </div>
 
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Alt</mat-label>
                 <input matInput [(ngModel)]="t.alt" [name]="'tAlt' + i" placeholder="Texto alternativo">
               </mat-form-field>
+
             </div>
 
             <h3 style="margin-top: 1rem;">Historias</h3>
@@ -90,15 +124,21 @@
 
   <!-- BOTONES ACCIONES -->
   <div class="actions">
-    <button mat-raised-button color="warn" (click)="resetForm()">Cancelar</button>
-    <button mat-raised-button color="primary" (click)="save()">
-      <mat-icon>save</mat-icon> Guardar cambios
+    <button mat-raised-button color="warn" (click)="resetForm()" [disabled]="isLoading">Cancelar</button>
+    <button mat-raised-button color="primary" (click)="save()" [disabled]="isLoading">
+      <mat-icon *ngIf="!isLoading">save</mat-icon>
+      <mat-spinner *ngIf="isLoading" diameter="20" style="margin-right: 8px;"></mat-spinner>
+      {{ isLoading ? 'Guardando...' : 'Guardar cambios' }}
     </button>
   </div>
 
-  <!-- NOTIFICACIÓN -->
+  <!-- NOTIFICACIONES -->
   <div *ngIf="showSuccessMessage" class="notification">
     ✅ Historia actualizada correctamente
+  </div>
+
+  <div *ngIf="errorMessage" class="notification" style="background: #fee2e2; color: #dc2626; border-color: #fca5a5;">
+    ❌ {{ errorMessage }}
   </div>
 
 </div>

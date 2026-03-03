@@ -32,7 +32,6 @@ import { ProfileComponent } from './admin/admin/profile/profile.component';
 // Guard
 import { authGuard } from '../app/principales/login/Auth.guard';
 import { SearchResultsComponent } from './components/search-results/search-results.component';
-import { EmailConfigEditorComponent } from './admin/editors/Emailconfig-editor/Emailconfig-editor.component';
 
 export const routes: Routes = [
 
@@ -80,7 +79,6 @@ export const routes: Routes = [
       { path: 'history', component: HistoryEditorComponent },
       { path: 'noticias', component: NoticiasEditorComponent },
       { path: 'profile', component: ProfileComponent },
-      { path: 'email-config', component: EmailConfigEditorComponent },
 
     ]
   },

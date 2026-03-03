@@ -14,17 +14,19 @@
 
   <div *ngIf="!isLoading && usuario" class="profile-layout">
 
-    <!-- COLUMNA IZQUIERDA: Avatar -->
+    <!-- ══════════════════════════════════════════════
+         SIDEBAR
+         ══════════════════════════════════════════════ -->
     <div class="profile-sidebar">
       <div class="avatar-wrap">
-        <img class="avatar-img" src="silueta.png" alt="/"/>
-
-        
+        <img class="avatar-img" src="silueta.png" alt="/" />
       </div>
 
       <div class="profile-name">
         <h2>{{ usuario.nombres }} {{ usuario.apellidos }}</h2>
-        <span class="rol-badge">{{ usuario.rol || 'usuario' }}</span>
+        <span class="rol-badge" [ngClass]="'rol-' + (usuario.rol || 'usuario').toLowerCase()">
+          {{ usuario.rol || 'usuario' }}
+        </span>
       </div>
 
       <div class="profile-info-list">
@@ -38,8 +40,9 @@
         <div class="info-item">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-            <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
-            <line x1="3" y1="10" x2="21" y2="10"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8"  y1="2" x2="8"  y2="6"/>
+            <line x1="3"  y1="10" x2="21" y2="10"/>
           </svg>
           <span>DNI: {{ usuario.codigo_dni }}</span>
         </div>
@@ -51,139 +54,486 @@
           <span>{{ usuario.cargo }}</span>
         </div>
       </div>
+
+      <div class="perms-card" *ngIf="esAdmin">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        <span>Acceso total de administrador</span>
+      </div>
+      <div class="perms-card limited" *ngIf="!esAdmin">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8"  x2="12"   y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <span>Acceso limitado — {{ usuario.rol || 'usuario' }}</span>
+      </div>
     </div>
 
-    <!-- COLUMNA DERECHA: Formularios -->
+    <!-- ══════════════════════════════════════════════
+         CONTENIDO CON TABS
+         ══════════════════════════════════════════════ -->
     <div class="profile-forms">
 
-      <!-- SECCIÓN: Datos personales -->
-      <div class="section-group">
-        <h3>
+      <!-- ── Barra de pestañas ── -->
+      <div class="tabs-bar">
+
+        <!-- Pestaña: Mis datos (todos) -->
+        <button class="tab-btn" [class.active]="activeTab === 'perfil'"
+                (click)="activeTab = 'perfil'">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
             <circle cx="12" cy="7" r="4"/>
           </svg>
-          Datos personales
-        </h3>
+          Mis datos
+        </button>
 
-        <div class="form-grid">
-          <div class="field-group">
-            <label>Nombres</label>
-            <input type="text" [(ngModel)]="form.nombres" name="nombres" placeholder="Nombres" />
-          </div>
-          <div class="field-group">
-            <label>Apellidos</label>
-            <input type="text" [(ngModel)]="form.apellidos" name="apellidos" placeholder="Apellidos" />
-          </div>
-          <div class="field-group">
-            <label>Correo electrónico</label>
-            <input type="email" [(ngModel)]="form.correo" name="correo" placeholder="correo@ejemplo.com" />
-          </div>
-          <div class="field-group">
-            <label>Cargo</label>
-            <input type="text" [(ngModel)]="form.cargo" name="cargo" placeholder="Cargo" />
-          </div>
-        </div>
-
-        <div class="actions">
-          <button class="btn-secondary" (click)="resetDatos()">Cancelar</button>
-          <button class="btn-primary" (click)="guardarDatos()" [disabled]="savingDatos">
-            <svg *ngIf="!savingDatos" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-              <polyline points="17 21 17 13 7 13 7 21"/>
-              <polyline points="7 3 7 8 15 8"/>
-            </svg>
-            <span class="mini-spinner" *ngIf="savingDatos"></span>
-            {{ savingDatos ? 'Guardando...' : 'Guardar datos' }}
-          </button>
-        </div>
-      </div>
-
-      <!-- SECCIÓN: Cambiar contraseña -->
-      <div class="section-group">
-        <h3>
+        <!-- Pestaña: Contraseña (todos) -->
+        <button class="tab-btn" [class.active]="activeTab === 'password'"
+                (click)="activeTab = 'password'">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="3" y="11" width="18" height="11" rx="2"/>
             <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
           </svg>
-          Cambiar contraseña
-        </h3>
+          Contraseña
+        </button>
 
-        <div class="form-grid">
-          <div class="field-group">
-            <label>Nueva contraseña</label>
-            <div class="input-pass-wrap">
-              <input
-                [type]="showNewPass ? 'text' : 'password'"
-                [(ngModel)]="passForm.newPassword"
-                name="newPassword"
-                placeholder="Mínimo 6 caracteres"
-              />
-              <button type="button" class="eye-btn" (click)="showNewPass = !showNewPass">
-                <svg *ngIf="!showNewPass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                  <circle cx="12" cy="12" r="3"/>
-                </svg>
-                <svg *ngIf="showNewPass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
-                  <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
-                  <line x1="1" y1="1" x2="23" y2="23"/>
-                </svg>
-              </button>
-            </div>
-          </div>
-          <div class="field-group">
-            <label>Confirmar contraseña</label>
-            <div class="input-pass-wrap">
-              <input
-                [type]="showConfirmPass ? 'text' : 'password'"
-                [(ngModel)]="passForm.confirmPassword"
-                name="confirmPassword"
-                placeholder="Repite la contraseña"
-              />
-              <button type="button" class="eye-btn" (click)="showConfirmPass = !showConfirmPass">
-                <svg *ngIf="!showConfirmPass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                  <circle cx="12" cy="12" r="3"/>
-                </svg>
-                <svg *ngIf="showConfirmPass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
-                  <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
-                  <line x1="1" y1="1" x2="23" y2="23"/>
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Error contraseña -->
-        <div class="alert-error" *ngIf="passError">
+        <!-- Pestaña: Crear cuenta (solo admin) -->
+        <button class="tab-btn" *ngIf="esAdmin"
+                [class.active]="activeTab === 'crear'"
+                (click)="activeTab = 'crear'">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="8" x2="12" y2="12"/>
-            <line x1="12" y1="16" x2="12.01" y2="16"/>
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <line x1="19" y1="8" x2="19" y2="14"/>
+            <line x1="16" y1="11" x2="22" y2="11"/>
           </svg>
-          {{ passError }}
-        </div>
+          Crear cuenta
+        </button>
 
-        <div class="actions">
-          <button class="btn-secondary" (click)="resetPass()">Cancelar</button>
-          <button class="btn-primary" (click)="cambiarPassword()" [disabled]="savingPass">
-            <svg *ngIf="!savingPass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="3" y="11" width="18" height="11" rx="2"/>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        <!-- Pestaña: Gestión (solo admin) -->
+        <button class="tab-btn" *ngIf="esAdmin"
+                [class.active]="activeTab === 'gestion'"
+                (click)="activeTab = 'gestion'">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          Gestión
+        </button>
+
+      </div>
+      <!-- /tabs-bar -->
+
+      <!-- ════════════════════════════════════════════
+           TAB 1 — Mis datos (todos)
+           ════════════════════════════════════════════ -->
+      <div class="tab-panel" *ngIf="activeTab === 'perfil'">
+        <div class="section-group">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
             </svg>
-            <span class="mini-spinner" *ngIf="savingPass"></span>
-            {{ savingPass ? 'Guardando...' : 'Cambiar contraseña' }}
-          </button>
+            Datos personales
+          </h3>
+          <div class="form-grid">
+            <div class="field-group">
+              <label>Nombres</label>
+              <input type="text" [(ngModel)]="form.nombres" name="nombres" placeholder="Nombres" />
+            </div>
+            <div class="field-group">
+              <label>Apellidos</label>
+              <input type="text" [(ngModel)]="form.apellidos" name="apellidos" placeholder="Apellidos" />
+            </div>
+            <div class="field-group">
+              <label>Correo electrónico</label>
+              <input type="email" [(ngModel)]="form.correo" name="correo" placeholder="correo@ejemplo.com" />
+            </div>
+            <div class="field-group">
+              <label>Cargo</label>
+              <input type="text" [(ngModel)]="form.cargo" name="cargo" placeholder="Cargo" />
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn-secondary" (click)="resetDatos()">Cancelar</button>
+            <button class="btn-primary" (click)="guardarDatos()" [disabled]="savingDatos">
+              <svg *ngIf="!savingDatos" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                <polyline points="17 21 17 13 7 13 7 21"/>
+                <polyline points="7 3 7 8 15 8"/>
+              </svg>
+              <span class="mini-spinner" *ngIf="savingDatos"></span>
+              {{ savingDatos ? 'Guardando...' : 'Guardar datos' }}
+            </button>
+          </div>
         </div>
       </div>
 
+      <!-- ════════════════════════════════════════════
+           TAB 2 — Contraseña (todos)
+           ════════════════════════════════════════════ -->
+      <div class="tab-panel" *ngIf="activeTab === 'password'">
+        <div class="section-group">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            Cambiar contraseña
+          </h3>
+          <div class="form-grid">
+            <div class="field-group">
+              <label>Nueva contraseña</label>
+              <div class="input-pass-wrap">
+                <input [type]="showNewPass ? 'text' : 'password'"
+                       [(ngModel)]="passForm.newPassword" name="newPassword"
+                       placeholder="Mínimo 6 caracteres" />
+                <button type="button" class="eye-btn" (click)="showNewPass = !showNewPass">
+                  <svg *ngIf="!showNewPass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <svg *ngIf="showNewPass"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Confirmar contraseña</label>
+              <div class="input-pass-wrap">
+                <input [type]="showConfirmPass ? 'text' : 'password'"
+                       [(ngModel)]="passForm.confirmPassword" name="confirmPassword"
+                       placeholder="Repite la contraseña" />
+                <button type="button" class="eye-btn" (click)="showConfirmPass = !showConfirmPass">
+                  <svg *ngIf="!showConfirmPass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <svg *ngIf="showConfirmPass"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="alert-error" *ngIf="passError">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            {{ passError }}
+          </div>
+          <div class="actions">
+            <button class="btn-secondary" (click)="resetPass()">Cancelar</button>
+            <button class="btn-primary" (click)="cambiarPassword()" [disabled]="savingPass">
+              <svg *ngIf="!savingPass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <span class="mini-spinner" *ngIf="savingPass"></span>
+              {{ savingPass ? 'Guardando...' : 'Cambiar contraseña' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════════
+           TAB 3 — Crear cuenta (solo admin)
+           ════════════════════════════════════════════ -->
+      <div class="tab-panel" *ngIf="activeTab === 'crear' && esAdmin">
+        <div class="section-group">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <line x1="19" y1="8" x2="19" y2="14"/>
+              <line x1="16" y1="11" x2="22" y2="11"/>
+            </svg>
+            Crear nueva cuenta
+          </h3>
+
+          <div class="form-grid">
+            <div class="field-group" [class.field-error]="newAccountErrors['nombres']">
+              <label>Nombres <span class="req">*</span></label>
+              <input type="text" [(ngModel)]="newUserForm.nombres" name="newNombres" placeholder="Nombres" />
+              <span class="field-msg" *ngIf="newAccountErrors['nombres']">{{ newAccountErrors['nombres'] }}</span>
+            </div>
+
+            <div class="field-group" [class.field-error]="newAccountErrors['apellidos']">
+              <label>Apellidos <span class="req">*</span></label>
+              <input type="text" [(ngModel)]="newUserForm.apellidos" name="newApellidos" placeholder="Apellidos" />
+              <span class="field-msg" *ngIf="newAccountErrors['apellidos']">{{ newAccountErrors['apellidos'] }}</span>
+            </div>
+
+            <div class="field-group" [class.field-error]="newAccountErrors['correo']">
+              <label>Correo electrónico <span class="req">*</span></label>
+              <input type="email" [(ngModel)]="newUserForm.correo" name="newCorreo" placeholder="correo@ejemplo.com" />
+              <span class="field-msg" *ngIf="newAccountErrors['correo']">{{ newAccountErrors['correo'] }}</span>
+            </div>
+
+            <div class="field-group" [class.field-error]="newAccountErrors['codigo_dni']">
+              <label>DNI <span class="req">*</span></label>
+              <input type="text" [(ngModel)]="newUserForm.codigo_dni" name="newDni"
+                     placeholder="8 dígitos" maxlength="8"
+                     (input)="soloNumerosDni($event)" />
+              <span class="field-msg" *ngIf="newAccountErrors['codigo_dni']">{{ newAccountErrors['codigo_dni'] }}</span>
+            </div>
+
+            <div class="field-group" [class.field-error]="newAccountErrors['cargo']">
+              <label>Cargo <span class="req">*</span></label>
+              <input type="text" [(ngModel)]="newUserForm.cargo" name="newCargo" placeholder="Ej: Analista, Técnico..." />
+              <span class="field-msg" *ngIf="newAccountErrors['cargo']">{{ newAccountErrors['cargo'] }}</span>
+            </div>
+
+            <div class="field-group" [class.field-error]="newAccountErrors['rol']">
+              <label>Rol <span class="req">*</span></label>
+              <select [(ngModel)]="newUserForm.rol" name="newRol">
+                <option value="" disabled>Selecciona un rol</option>
+                <option *ngFor="let r of ROLES" [value]="r">{{ r | titlecase }}</option>
+              </select>
+              <span class="field-msg" *ngIf="newAccountErrors['rol']">{{ newAccountErrors['rol'] }}</span>
+            </div>
+
+            <div class="field-group" [class.field-error]="newAccountErrors['password']">
+              <label>Contraseña <span class="req">*</span></label>
+              <div class="input-pass-wrap">
+                <input [type]="showNewAccountPass ? 'text' : 'password'"
+                       [(ngModel)]="newUserForm.password" name="newAccountPass"
+                       placeholder="Mínimo 6 caracteres" />
+                <button type="button" class="eye-btn" (click)="showNewAccountPass = !showNewAccountPass">
+                  <svg *ngIf="!showNewAccountPass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <svg *ngIf="showNewAccountPass"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+              </div>
+              <span class="field-msg" *ngIf="newAccountErrors['password']">{{ newAccountErrors['password'] }}</span>
+            </div>
+
+            <div class="field-group" [class.field-error]="newAccountErrors['confirmPassword']">
+              <label>Confirmar contraseña <span class="req">*</span></label>
+              <div class="input-pass-wrap">
+                <input [type]="showNewAccountConfirm ? 'text' : 'password'"
+                       [(ngModel)]="newUserForm.confirmPassword" name="newAccountConfirm"
+                       placeholder="Repite la contraseña" />
+                <button type="button" class="eye-btn" (click)="showNewAccountConfirm = !showNewAccountConfirm">
+                  <svg *ngIf="!showNewAccountConfirm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <svg *ngIf="showNewAccountConfirm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+              </div>
+              <span class="field-msg" *ngIf="newAccountErrors['confirmPassword']">{{ newAccountErrors['confirmPassword'] }}</span>
+            </div>
+          </div>
+
+          <div class="alert-error" *ngIf="newAccountErrors['general']">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            {{ newAccountErrors['general'] }}
+          </div>
+
+          <div class="actions">
+            <button class="btn-secondary" (click)="resetNewUser()">Limpiar</button>
+            <button class="btn-primary" (click)="crearCuenta()" [disabled]="creatingAccount">
+              <svg *ngIf="!creatingAccount" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <line x1="19" y1="8" x2="19" y2="14"/>
+                <line x1="16" y1="11" x2="22" y2="11"/>
+              </svg>
+              <span class="mini-spinner" *ngIf="creatingAccount"></span>
+              {{ creatingAccount ? 'Creando...' : 'Crear cuenta' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════════
+           TAB 4 — Gestión de cuentas (solo admin)
+           ════════════════════════════════════════════ -->
+      <div class="tab-panel" *ngIf="activeTab === 'gestion' && esAdmin">
+        <div class="section-group">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            Gestión de cuentas
+          </h3>
+
+          <!-- Buscador -->
+          <div class="search-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input type="text" [(ngModel)]="searchTerm" name="search"
+                   placeholder="Buscar por nombre, DNI, correo o rol..." />
+          </div>
+
+          <!-- Loading -->
+          <div class="loading-mini" *ngIf="loadingLista">
+            <span class="mini-spinner"></span> Cargando usuarios...
+          </div>
+
+          <!-- Lista -->
+          <div class="users-table-wrap" *ngIf="!loadingLista">
+            <div *ngIf="usuariosFiltrados.length === 0" class="empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+              </svg>
+              <p>No se encontraron usuarios.</p>
+            </div>
+
+            <div class="user-row"
+                 *ngFor="let u of usuariosFiltrados"
+                 [class.selected]="usuarioSeleccionado?.id === u.id"
+                 (click)="seleccionarUsuario(u)">
+              <div class="user-row-avatar">
+                {{ (u.nombres || '?').charAt(0) }}{{ (u.apellidos || '?').charAt(0) }}
+              </div>
+              <div class="user-row-info">
+                <span class="user-row-name">{{ u.nombres }} {{ u.apellidos }}</span>
+                <span class="user-row-meta">{{ u.correo || '—' }} · DNI {{ u.codigo_dni }}</span>
+              </div>
+              <span class="rol-badge small" [ngClass]="'rol-' + (u.rol || 'usuario').toLowerCase()">
+                {{ u.rol || 'usuario' }}
+              </span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Ficha del usuario seleccionado -->
+          <div class="user-card" *ngIf="usuarioSeleccionado">
+            <div class="user-card-header">
+              <div class="user-card-avatar">
+                {{ (usuarioSeleccionado.nombres || '?').charAt(0) }}{{ (usuarioSeleccionado.apellidos || '?').charAt(0) }}
+              </div>
+              <div>
+                <p class="user-card-name">{{ usuarioSeleccionado.nombres }} {{ usuarioSeleccionado.apellidos }}</p>
+                <p class="user-card-sub">{{ usuarioSeleccionado.correo }} · DNI {{ usuarioSeleccionado.codigo_dni }}</p>
+              </div>
+              <button class="close-btn" (click)="cerrarFicha()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6"  x2="6"  y2="18"/>
+                  <line x1="6"  y1="6"  x2="18" y2="18"/>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Acciones -->
+            <div class="card-actions-row">
+              <button class="card-action-btn"
+                      [class.open]="panelAccion === 'rol'"
+                      (click)="togglePanel('rol')" [disabled]="procesando">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+                Cambiar rol
+              </button>
+
+              <button class="card-action-btn"
+                      [class.open]="panelAccion === 'password'"
+                      (click)="togglePanel('password')" [disabled]="procesando">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                Contraseña
+              </button>
+
+              <button class="card-action-btn danger-btn"
+                      [class.open]="panelAccion === 'delete'"
+                      (click)="togglePanel('delete')" [disabled]="procesando">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                  <path d="M10 11v6"/><path d="M14 11v6"/>
+                  <path d="M9 6V4h6v2"/>
+                </svg>
+                Eliminar
+              </button>
+            </div>
+
+            <!-- Panel: cambiar rol -->
+            <div class="action-panel" *ngIf="panelAccion === 'rol'">
+              <div class="form-grid">
+                <div class="field-group">
+                  <label>Nuevo rol</label>
+                  <select [(ngModel)]="nuevoRol" name="nuevoRol">
+                    <option value="" disabled>Selecciona un rol</option>
+                    <option *ngFor="let r of ROLES" [value]="r">{{ r | titlecase }}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="actions">
+                <button class="btn-secondary" (click)="panelAccion = null">Cancelar</button>
+                <button class="btn-primary" (click)="cambiarRol()" [disabled]="procesando">
+                  <span class="mini-spinner" *ngIf="procesando"></span>
+                  {{ procesando ? 'Guardando...' : 'Guardar rol' }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Panel: cambiar contraseña -->
+            <div class="action-panel" *ngIf="panelAccion === 'password'">
+              <div class="form-grid">
+                <div class="field-group">
+                  <label>Nueva contraseña</label>
+                  <div class="input-pass-wrap">
+                    <input [type]="showGestionPass ? 'text' : 'password'"
+                           [(ngModel)]="gestionPassForm.newPassword"
+                           name="gestionPass" placeholder="Mínimo 6 caracteres" />
+                    <button type="button" class="eye-btn" (click)="showGestionPass = !showGestionPass">
+                      <svg *ngIf="!showGestionPass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                      <svg *ngIf="showGestionPass"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                    </button>
+                  </div>
+                </div>
+                <div class="field-group">
+                  <label>Confirmar contraseña</label>
+                  <div class="input-pass-wrap">
+                    <input [type]="showGestionConfirm ? 'text' : 'password'"
+                           [(ngModel)]="gestionPassForm.confirmPassword"
+                           name="gestionConfirm" placeholder="Repite la contraseña" />
+                    <button type="button" class="eye-btn" (click)="showGestionConfirm = !showGestionConfirm">
+                      <svg *ngIf="!showGestionConfirm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                      <svg *ngIf="showGestionConfirm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="alert-error" *ngIf="gestionPassError">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                {{ gestionPassError }}
+              </div>
+              <div class="actions">
+                <button class="btn-secondary" (click)="panelAccion = null">Cancelar</button>
+                <button class="btn-primary" (click)="cambiarPasswordGestion()" [disabled]="procesando">
+                  <span class="mini-spinner" *ngIf="procesando"></span>
+                  {{ procesando ? 'Guardando...' : 'Guardar contraseña' }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Panel: confirmar eliminar -->
+            <div class="action-panel danger-panel" *ngIf="panelAccion === 'delete'">
+              <p>¿Seguro que deseas eliminar la cuenta de
+                <strong>{{ usuarioSeleccionado.nombres }} {{ usuarioSeleccionado.apellidos }}</strong>?
+                Esta acción no se puede deshacer.
+              </p>
+              <div class="actions">
+                <button class="btn-secondary" (click)="panelAccion = null">Cancelar</button>
+                <button class="btn-danger" (click)="confirmarEliminar()" [disabled]="procesando">
+                  <span class="mini-spinner" *ngIf="procesando"></span>
+                  {{ procesando ? 'Eliminando...' : 'Sí, eliminar' }}
+                </button>
+              </div>
+            </div>
+
+          </div>
+          <!-- /ficha -->
+
+        </div>
+      </div>
+      <!-- /tab gestión -->
+
     </div>
+    <!-- /profile-forms -->
   </div>
 
   <!-- NOTIFICACIONES -->
   <div *ngIf="successMessage" class="notification">✅ {{ successMessage }}</div>
-  <div *ngIf="errorMessage" class="notification error">❌ {{ errorMessage }}</div>
+  <div *ngIf="errorMessage"   class="notification error">❌ {{ errorMessage }}</div>
 
 </div>

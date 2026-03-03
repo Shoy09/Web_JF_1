@@ -37,11 +37,6 @@
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
-                  <mat-label>Contacto Ruta</mat-label>
-                  <input matInput formControlName="contactoRuta" placeholder="/contacto">
-                </mat-form-field>
-
-                <mat-form-field appearance="outline">
                   <mat-label>Texto "Síguenos"</mat-label>
                   <input matInput formControlName="siguenos" placeholder="Síguenos en">
                 </mat-form-field>
@@ -113,10 +108,7 @@
                       <input matInput formControlName="nombre" placeholder="Nosotros">
                     </mat-form-field>
 
-                    <mat-form-field appearance="outline" class="full-width">
-                      <mat-label>Ruta</mat-label>
-                      <input matInput formControlName="ruta" placeholder="/acerca-de">
-                    </mat-form-field>
+
 
                     <div class="full-width" style="display: flex; justify-content: flex-end; margin-top: 1rem;">
                       <button mat-raised-button color="warn" type="button" (click)="removeAboutItem(i)">

@@ -26,10 +26,39 @@
               <input matInput [(ngModel)]="data.hero.subtitulo" name="heroSubtitulo" placeholder="Subtítulo descriptivo">
             </mat-form-field>
 
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Imagen de fondo (URL)</mat-label>
-              <input matInput [(ngModel)]="data.hero.imagenFondo" name="heroImagen" placeholder="/assets/images/hero-bg.jpg">
-            </mat-form-field>
+            <!-- Imagen de Fondo del Hero -->
+            <div class="full-width section-group">
+              <h4 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <mat-icon style="color: #3b82f6;">image</mat-icon>
+                Imagen de Fondo
+              </h4>
+              
+              <div class="upload-row">
+                <!-- Preview -->
+                <img *ngIf="heroImagePreview"
+                     [src]="heroImagePreview"
+                     style="height: 120px; border-radius: 4px; margin-bottom: 8px; display: block; object-fit: cover;">
+                
+                <!-- Input file -->
+                <input type="file" accept="image/*" (change)="onHeroImageSelected($event)" 
+                       style="display: none;" #heroImageInput>
+                
+                <!-- Dropzone -->
+                <div class="dropzone" 
+                     (dragover)="onDragOver($event)" 
+                     (drop)="onHeroImageDrop($event)"
+                     (click)="heroImageInput.click()"
+                     style="cursor: pointer;">
+                  <mat-icon>cloud_upload</mat-icon>
+                  <span>Arrastra la imagen aquí o haz clic para seleccionar</span>
+                </div>
+
+                <!-- Nombre del archivo -->
+                <div class="filename" *ngIf="heroImageFileName">
+                  <mat-icon>image</mat-icon> {{ heroImageFileName }}
+                </div>
+              </div>
+            </div>
           </div>
 
           <h3 style="margin-top: 1.5rem;">Botón del Hero <span class="optional-badge">opcional</span></h3>
@@ -39,11 +68,6 @@
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Texto del botón</mat-label>
                 <input matInput [(ngModel)]="data.hero.boton.label" name="botonLabel" placeholder="Ver más">
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>URL del botón</mat-label>
-                <input matInput [(ngModel)]="data.hero.boton.url" name="botonUrl" placeholder="/mas-informacion">
               </mat-form-field>
             </div>
             <button mat-raised-button color="warn" type="button" (click)="removeHeroButton()">
@@ -94,16 +118,7 @@
                     <mat-icon>add</mat-icon> Agregar párrafo
                   </button>
                 </div>
-
-                <mat-form-field appearance="outline" class="full-width">
-                  <mat-label>Imagen (URL - opcional)</mat-label>
-                  <input matInput [(ngModel)]="section.imagen" [name]="'contentImagen' + i" placeholder="/assets/images/section-image.jpg">
-                </mat-form-field>
-
                 <div class="full-width panel-actions">
-                  <mat-checkbox [(ngModel)]="section.reverse" [name]="'contentReverse' + i">
-                    Invertir orden (imagen a la derecha)
-                  </mat-checkbox>
 
                   <button mat-raised-button color="warn" type="button" (click)="removeContentSection(i)" *ngIf="data.contentSections.length > 1">
                     <mat-icon>delete</mat-icon> Eliminar sección
@@ -156,10 +171,41 @@
                   </button>
                 </div>
 
-                <mat-form-field appearance="outline" class="full-width">
-                  <mat-label>Imagen (URL)</mat-label>
-                  <input matInput [(ngModel)]="section.imagen" [name]="'infoImagen' + i" placeholder="/assets/images/info-section.jpg">
-                </mat-form-field>
+                <!-- Imagen de Info Section -->
+                <div class="full-width section-group">
+                  <h4 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                    <mat-icon style="color: #3b82f6;">image</mat-icon>
+                    Imagen
+                  </h4>
+                  
+                  <div class="upload-row">
+                    <!-- Preview -->
+                    <img *ngIf="infoImagePreviews[i]"
+                         [src]="infoImagePreviews[i]"
+                         style="height: 100px; border-radius: 4px; margin-bottom: 8px; display: block; object-fit: cover;">
+                    
+                    <!-- Input file - using ID instead of template ref for dynamic elements -->
+                    <input type="file" accept="image/*" 
+                           (change)="onInfoImageSelected(i, $event)" 
+                           style="display: none;" 
+                           [id]="'infoImageInput-' + i">
+                    
+                    <!-- Dropzone -->
+                    <div class="dropzone" 
+                         (dragover)="onDragOver($event)" 
+                         (drop)="onInfoImageDrop(i, $event)"
+                         (click)="selectFileById('infoImageInput-' + i)"
+                         style="cursor: pointer;">
+                      <mat-icon>cloud_upload</mat-icon>
+                      <span>Arrastra la imagen aquí o haz clic</span>
+                    </div>
+
+                    <!-- Nombre del archivo -->
+                    <div class="filename" *ngIf="infoImageFileNames[i]">
+                      <mat-icon>image</mat-icon> {{ infoImageFileNames[i] }}
+                    </div>
+                  </div>
+                </div>
 
                 <div class="full-width panel-actions">
                   <mat-checkbox [(ngModel)]="section.reverse" [name]="'infoReverse' + i">
@@ -198,11 +244,41 @@
                 <textarea matInput [(ngModel)]="data.bottomBanner.texto" name="bannerTexto" rows="2" placeholder="Contacta con nosotros para más información"></textarea>
               </mat-form-field>
 
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Imagen de fondo (URL)</mat-label>
-                <input matInput [(ngModel)]="data.bottomBanner.imagen" name="bannerImagen" placeholder="/assets/images/banner.jpg">
-              </mat-form-field>
+              <!-- Imagen de Banner -->
+              <div class="full-width section-group">
+                <h4 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                  <mat-icon style="color: #3b82f6;">image</mat-icon>
+                  Imagen de Fondo
+                </h4>
+                
+                <div class="upload-row">
+                  <!-- Preview -->
+                  <img *ngIf="bannerImagePreview"
+                       [src]="bannerImagePreview"
+                       style="height: 120px; border-radius: 4px; margin-bottom: 8px; display: block; object-fit: cover;">
+                  
+                  <!-- Input file -->
+                  <input type="file" accept="image/*" (change)="onBannerImageSelected($event)" 
+                         style="display: none;" #bannerImageInput>
+                  
+                  <!-- Dropzone -->
+                  <div class="dropzone" 
+                       (dragover)="onDragOver($event)" 
+                       (drop)="onBannerImageDrop($event)"
+                       (click)="bannerImageInput.click()"
+                       style="cursor: pointer;">
+                    <mat-icon>cloud_upload</mat-icon>
+                    <span>Arrastra la imagen aquí o haz clic</span>
+                  </div>
+
+                  <!-- Nombre del archivo -->
+                  <div class="filename" *ngIf="bannerImageFileName">
+                    <mat-icon>image</mat-icon> {{ bannerImageFileName }}
+                  </div>
+                </div>
+              </div>
             </div>
+
             <button mat-raised-button color="warn" type="button" (click)="removeBottomBanner()">
               <mat-icon>delete</mat-icon> Eliminar banner
             </button>
@@ -222,15 +298,21 @@
 
   <!-- BOTONES ACCIONES -->
   <div class="actions">
-    <button mat-raised-button color="warn" (click)="resetForm()">Cancelar</button>
-    <button mat-raised-button color="primary" (click)="save()">
-      <mat-icon>save</mat-icon> Guardar cambios
+    <button mat-raised-button color="warn" (click)="resetForm()" [disabled]="isLoading">Cancelar</button>
+    <button mat-raised-button color="primary" (click)="save()" [disabled]="isLoading">
+      <mat-icon *ngIf="!isLoading">save</mat-icon>
+      <mat-spinner *ngIf="isLoading" diameter="20" style="margin-right: 8px;"></mat-spinner>
+      {{ isLoading ? 'Guardando...' : 'Guardar cambios' }}
     </button>
   </div>
 
-  <!-- NOTIFICACIÓN -->
+  <!-- NOTIFICACIONES -->
   <div *ngIf="showSuccessMessage" class="notification">
     ✅ Página actualizada correctamente
+  </div>
+
+  <div *ngIf="errorMessage" class="notification" style="background: #fee2e2; color: #dc2626; border-color: #fca5a5;">
+    ❌ {{ errorMessage }}
   </div>
 
 </div>

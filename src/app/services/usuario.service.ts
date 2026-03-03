@@ -10,12 +10,27 @@ export class UsuarioService {
   constructor(private http: HttpClient) {}
 
   obtenerPerfil(): Observable<Usuario> {
-    // ✅ Sin token manual — el interceptor lo agrega automáticamente
-    return this.http.get<Usuario>(`${API_BASE_URL}/perfil`);
+    return this.http.get<Usuario>(`${API_BASE_URL}/usuarios/perfil`);
   }
 
   obtenerUsuarios(): Observable<Usuario[]> {
-    // ✅ Sin token manual — el interceptor lo agrega automáticamente
-    return this.http.get<Usuario[]>(API_BASE_URL);
+    return this.http.get<Usuario[]>(`${API_BASE_URL}/usuarios`);
+  }
+
+  crearUsuario(datos: Omit<Usuario, 'id'>): Observable<Usuario> {
+    return this.http.post<Usuario>(`${API_BASE_URL}/usuarios`, datos);
+  }
+
+  actualizarUsuario(id: number, datos: Partial<Usuario>): Observable<Usuario> {
+    return this.http.put<Usuario>(`${API_BASE_URL}/usuarios/${id}`, datos);
+  }
+
+  eliminarUsuario(id: number): Observable<void> {
+    return this.http.delete<void>(`${API_BASE_URL}/usuarios/${id}`);
+  }
+
+  // Si tu backend usa un campo "activo" en el PUT úsalo así:
+  toggleEstado(id: number, activo: boolean): Observable<Usuario> {
+    return this.http.put<Usuario>(`${API_BASE_URL}/usuarios/${id}`, { activo });
   }
 }

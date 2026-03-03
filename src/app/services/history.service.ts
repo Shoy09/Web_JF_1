@@ -1,3 +1,4 @@
+// history.service.ts
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -43,6 +44,48 @@ export class HistoryService {
     };
 
     this.dataSubject.next(data);
+  }
+
+  // =========================
+  // UPLOAD DE IMÁGENES BASE64 A CLOUDINARY
+  // =========================
+
+  async uploadImage(file: File, publicId: string = ''): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      
+      reader.onload = async (e: any) => {
+        try {
+          const base64 = e.target.result; // data:image/...;base64,...
+
+          // Enviar base64 al backend
+          const finalPublicId = publicId || `history_${Date.now()}`;
+          
+          const response = await this.http.post<{ secure_url: string }>(
+            `${API_BASE_URL}/history/upload`,
+            {
+              imageData: base64,
+              publicId: finalPublicId,
+              folder: 'imagenes/history'
+            }
+          ).toPromise();
+
+          if (response?.secure_url) {
+            resolve(response.secure_url);
+          } else {
+            reject(new Error('No se recibió URL de Cloudinary'));
+          }
+        } catch (error: any) {
+          reject(new Error(`Error al subir imagen: ${error.message}`));
+        }
+      };
+
+      reader.onerror = () => {
+        reject(new Error('Error al leer el archivo'));
+      };
+
+      reader.readAsDataURL(file);
+    });
   }
 
   // =========================

@@ -1,7 +1,8 @@
+// mas-info.service.ts
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { MasInfoData } from '../models/masinfo.model';
+import { MasInfoData, HeroSection, ContentSection, InfoSection, BottomBanner } from '../models/masinfo.model';
 import { API_BASE_URL } from '../api.config';
 
 @Injectable({ providedIn: 'root' })
@@ -34,6 +35,48 @@ export class MasInfoService {
     this.http.put(`${API_BASE_URL}/mas-info`, this._data).toPromise().catch(() => {});
   }
 
+  // ═══════════════════════════════════════════════════════════════════════
+  // CARGA DE IMÁGENES BASE64 A CLOUDINARY (como general-products)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  async uploadImage(file: File, publicId: string = ''): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      
+      reader.onload = async (e: any) => {
+        try {
+          const base64 = e.target.result; // data:image/...;base64,...
+
+          // Enviar base64 al backend
+          const finalPublicId = publicId || `masinfo_${Date.now()}`;
+          
+          const response = await this.http.post<{ secure_url: string }>(
+            `${API_BASE_URL}/mas-info/upload`,
+            {
+              imageData: base64,
+              publicId: finalPublicId,
+              folder: 'imagenes/mas-info'
+            }
+          ).toPromise();
+
+          if (response?.secure_url) {
+            resolve(response.secure_url);
+          } else {
+            reject(new Error('No se recibió URL de Cloudinary'));
+          }
+        } catch (error: any) {
+          reject(new Error(`Error al subir imagen: ${error.message}`));
+        }
+      };
+
+      reader.onerror = () => {
+        reject(new Error('Error al leer el archivo'));
+      };
+
+      reader.readAsDataURL(file);
+    });
+  }
+
   reset() {
     this._data = this.getDefaultData();
     localStorage.removeItem(this.STORAGE_KEY);
@@ -57,22 +100,24 @@ export class MasInfoService {
         titulo: 'LO QUE SE NECESITA',
         subtitulo: 'Brocas fabricadas especialmente para sus operaciones.',
         imagenFondo: 'https://www.terelion.com/wp-content/uploads/2021/07/home-page-banner.jpg',
-      boton: {
-        label: 'Contáctenos',
-        url: '/contacto'
-  }
+        boton: {
+          label: 'Contáctenos',
+          url: '/contacto'
+        }
       },
       
       contentSections : [
-  {
-    titulo: 'Lo que se necesita para realizar el trabajo.',
-    parrafos: [
-      'Esta línea de trabajo no es para todos. En Terelion, conocemos las condiciones exigentes y los desafíos cotidianos que enfrentan sus operaciones. Y sabemos lo que se necesita para realizar el trabajo.',
-      'Trabajamos con todos nuestros clientes para garantizar que las brocas que utilizan sean las más duraderas y resistentes, eficientes y rentables del mercado. Avanzar en las operaciones más difíciles.'
-    ]
-  }
-        
+        {
+          titulo: 'Lo que se necesita para realizar el trabajo.',
+          parrafos: [
+            'Esta línea de trabajo no es para todos. En Terelion, conocemos las condiciones exigentes y los desafíos cotidianos que enfrentan sus operaciones. Y sabemos lo que se necesita para realizar el trabajo.',
+            'Trabajamos con todos nuestros clientes para garantizar que las brocas que utilizan sean las más duraderas y resistentes, eficientes y rentables del mercado. Avanzar en las operaciones más difíciles.'
+          ],
+          imagen: '',
+          reverse: false
+        }
       ],
+
       sections: [
         {
           titulo: 'Confíe en Terelion. Tenemos lo que se necesita.',
@@ -80,7 +125,8 @@ export class MasInfoService {
             'Lograr ese avance al final de un largo día de trabajo.',
             'Confíe en Terelion para operaciones más productivas.'
           ],
-          imagen: 'https://www.terelion.com/wp-content/uploads/2021/07/image-1-1024x768.jpg'
+          imagen: 'https://www.terelion.com/wp-content/uploads/2021/07/image-1-1024x768.jpg',
+          reverse: false
         },
         {
           titulo: 'Brocas de calidad para lograr el avance',
@@ -91,6 +137,7 @@ export class MasInfoService {
           reverse: true
         }
       ],
+
       bottomBanner: {
         titulo: 'Bajo el mismo cielo, hacia la misma meta',
         texto: 'Terelion tiene más de 50 años de experiencia en la producción de brocas rotativas. Combinamos nuestra tradición, experiencia e innovación con asociaciones de clientes proactivas y rentables. Nuestros equipos de servicio expertos están en el lugar, a su lado. Ayudándole a tomar las mejores decisiones para sus operaciones de perforación en cada turno.',
