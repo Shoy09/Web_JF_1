@@ -2,10 +2,10 @@
    CONTACT CONTAINER
 ================================ */
 .contact-container {
-  padding: 80px 8%;
+  padding: 200px 8% 0;
   background: #fff;
   position: relative;
-  margin-top: 200px;
+  margin-top: 0;
 }
 
 /* ===============================

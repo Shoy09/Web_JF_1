@@ -586,6 +586,19 @@ a{
   transform: scale(1.1);
 }
 
+/* Lupa e input siempre blancos cuando el mega menu está abierto */
+.nav-right.mega-active .search-trigger svg {
+  stroke: white !important;
+}
+
+.nav-right.mega-active .search-input {
+  color: white !important;
+  border-bottom-color: white !important;
+}
+
+.nav-right.mega-active .search-input::placeholder {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
 .respons li {
   list-style: none;
   color: rgb(65, 64, 64);

@@ -1,4 +1,4 @@
-<div class="page-container">
+<div class="page-container" *ngIf="!isLoading && headerData">
 
   <!-- HEADER -->
   <header class="section-header">
@@ -23,7 +23,7 @@
       
       <div class="card-content">
         <h3 class="product-title">{{ product?.title }}</h3>
-        <a [href]="product.link" class="view-link">VER</a>
+        <a [routerLink]="product.link" class="view-link">VER</a>
       </div>
     </div>
   </section>
@@ -32,9 +32,9 @@
 <section class="info-section text-center">
   <p>{{ infoSection.texto }}</p>
   
-  <a [href]="infoSection.boton.link" class="contact-btn">
-    {{ infoSection.boton.label }}
-  </a>
+<a [routerLink]="['/contactos']" class="contact-btn">
+  {{ infoSection.boton.label }}
+</a>
 </section>
 
 </div>

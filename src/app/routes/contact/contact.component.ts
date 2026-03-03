@@ -3,13 +3,17 @@ import { Observable, map, startWith, debounceTime, distinctUntilChanged } from '
 import { ContactService } from '../../services/contact.service';
 import { Region, ContactPageContent } from '../../models/contact.model';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatAutocompleteModule, MAT_AUTOCOMPLETE_SCROLL_STRATEGY } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; // <-- IMPORTAR ESTO
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { Overlay } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-contact',
@@ -22,10 +26,19 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; /
     MatInputModule,
     MatAutocompleteModule,
     MatIconModule,
-    MatProgressSpinnerModule // <-- AGREGAR AQUÍ
+    MatProgressSpinnerModule,
+    MatButtonModule,
+    MatSnackBarModule
   ],
   templateUrl: './contact.component.html',
-  styleUrls: ['./contact.component.css']
+  styleUrls: ['./contact.component.css'],
+  providers: [
+    {
+      provide: MAT_AUTOCOMPLETE_SCROLL_STRATEGY,
+      useFactory: (overlay: Overlay) => () => overlay.scrollStrategies.close(),
+      deps: [Overlay]
+    }
+  ]
 })
 export class ContactComponent implements OnInit {
 
@@ -35,8 +48,18 @@ export class ContactComponent implements OnInit {
 
   regions: Region[] = [];
   filteredRegions!: Observable<Region[]>;
-  
-  // INICIALIZAR content con un objeto vacío
+
+  isSending = false;
+
+  contactForm = new FormGroup({
+    firstName: new FormControl('', [Validators.required]),
+    lastName:  new FormControl('', [Validators.required]),
+    email:     new FormControl('', [Validators.required, Validators.email]),
+    phone:     new FormControl(''),
+    company:   new FormControl(''),
+    message:   new FormControl('', [Validators.required])
+  });
+
   content: ContactPageContent = {
     header: {
       subtitle: '',
@@ -54,20 +77,30 @@ export class ContactComponent implements OnInit {
     }
   };
 
-  constructor(private contactService: ContactService) {}
+  constructor(
+    private contactService: ContactService,
+    private http: HttpClient,
+    private snackBar: MatSnackBar
+  ) {
+    const containers = document.querySelectorAll('.cdk-overlay-container');
+    containers.forEach((container, index) => {
+      if (index > 0) container.remove();
+    });
+  }
 
   ngOnInit() {
+    this.setupFilteredRegions();
+    this.setupValueChanges();
+
     this.contactService.regions$.subscribe(data => {
       this.regions = data;
-      this.setupFilteredRegions();
+      const currentValue = this.regionControl.value || '';
+      this.regionControl.setValue(currentValue, { emitEvent: true });
     });
 
     this.contactService.content$.subscribe(data => {
       this.content = data;
     });
-
-    this.setupFilteredRegions();
-    this.setupValueChanges();
   }
 
   private setupFilteredRegions() {
@@ -75,8 +108,8 @@ export class ContactComponent implements OnInit {
       startWith(''),
       debounceTime(200),
       distinctUntilChanged(),
-      map(value => this.isFromAutocomplete ? 
-        (this.isFromAutocomplete = false, this.regions) : 
+      map(value => this.isFromAutocomplete ?
+        (this.isFromAutocomplete = false, this.regions) :
         this.filterRegions(value || ''))
     );
   }
@@ -91,11 +124,13 @@ export class ContactComponent implements OnInit {
 
   private filterRegions(value: string): Region[] {
     const filterValue = value.toLowerCase().trim();
-    return !filterValue ? this.regions : this.regions.filter(region =>
-      region.label.toLowerCase().includes(filterValue) ||
-      region.contact.name.toLowerCase().includes(filterValue) ||
-      region.contact.office.country.toLowerCase().includes(filterValue)
-    );
+    return !filterValue
+      ? this.regions
+      : this.regions.filter(region =>
+          region.label.toLowerCase().includes(filterValue) ||
+          region.contact.name.toLowerCase().includes(filterValue) ||
+          region.contact.office.country.toLowerCase().includes(filterValue)
+        );
   }
 
   selectRegion(region: Region) {
@@ -112,5 +147,40 @@ export class ContactComponent implements OnInit {
 
   displayFn(region: Region): string {
     return region ? region.label : '';
+  }
+
+  get canSubmit(): boolean {
+    return !!this.selectedRegion && this.contactForm.valid && !this.isSending;
+  }
+
+  onSubmit() {
+    if (!this.canSubmit) return;
+
+    this.isSending = true;
+
+    const payload = {
+      ...this.contactForm.value,
+      toEmail:     this.selectedRegion!.contact.email,  // correo según región
+      region:      this.selectedRegion!.label,
+      contactName: this.selectedRegion!.contact.name
+    };
+
+    this.http.post('/api/contact-mail/send', payload).subscribe({
+      next: () => {
+        this.snackBar.open('✅ Mensaje enviado correctamente!', 'Cerrar', {
+          duration: 4000,
+          panelClass: ['snack-success']
+        });
+        this.contactForm.reset();
+        this.isSending = false;
+      },
+      error: () => {
+        this.snackBar.open('❌ Error al enviar. Intenta nuevamente.', 'Cerrar', {
+          duration: 4000,
+          panelClass: ['snack-error']
+        });
+        this.isSending = false;
+      }
+    });
   }
 }

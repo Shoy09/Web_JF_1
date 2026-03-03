@@ -1,6 +1,12 @@
 <!-- SECCIÓN NAVBAR PRINCIPAL -->
-<nav class="navbar" [class.nav-active]="showProductos || showAbout || menuOpen" [class.nav-product-page]="isProductPage" [class.nav-contact-page]="isContactPage" [class.nav-about-page]="isAboutPage" [class.nav-Noticias-page]="isNoticiasPage">
-  
+<nav #navbarEl
+  class="navbar"
+  [class.nav-active]="showProductos || showAbout || menuOpen"
+  [class.nav-product-page]="isProductPage"
+  [class.nav-contact-page]="isContactPage"
+  [class.nav-about-page]="isAboutPage"
+  [class.nav-Noticias-page]="isNoticiasPage">
+
   <div class="nav-left">
     <button class="hamburger-btn" (click)="toggleMenu()" [class.active]="menuOpen" aria-label="Menu">
       <svg width="28" height="18" viewBox="0 0 28 18">
@@ -8,7 +14,7 @@
         <rect x="6" y="8" width="24" height="2" fill="white" />
         <rect x="6" y="16" width="16" height="2" fill="white" />
       </svg>
-    </button> 
+    </button>
 
     <ul class="nav-links" [class.mobile-menu-open]="menuOpen">
       <li>
@@ -16,10 +22,10 @@
           {{ navbarData.productosLabel }}
           <span class="accordion-toggle" *ngIf="isMobileView">{{ showProductos ? '−' : '+' }}</span>
         </a>
-        
+
         <div class="accordion-productos" *ngIf="showProductos && isMobileView">
           <div class="accordion-section" *ngFor="let categoria of productosMenu">
-            <a routerLink="/productos/general" (click)="cerrarMenusAlNavegar()">
+            <a [routerLink]="categoria.ruta" (click)="cerrarMenusAlNavegar()">
               <h4 class="accordion-title">{{ categoria.titulo }}</h4>
             </a>
             <ul class="accordion-links">
@@ -30,7 +36,7 @@
           </div>
         </div>
       </li>
-      
+
       <li class="about-us-menu">
         <a href="#" (click)="toggleAbout($event)" [class.active-link]="showAbout" class="accordion-header">
           {{ navbarData.aboutLabel }}
@@ -54,31 +60,21 @@
 
       <div class="back" *ngIf="menuOpen">
         <div class="back-content">
-          <div class="text">
-            <p>Menu</p>
-          </div> 
-          <button class="close-btn" (click)="toggleMenu()" aria-label="Cerrar menú">
-            ✕
-          </button>
+          <div class="text"><p>Menu</p></div>
+          <button class="close-btn" (click)="toggleMenu()" aria-label="Cerrar menú">✕</button>
         </div>
       </div>
 
       <div class="respons">
         <li>{{ navbarData.siguenos }}</li>
-
         <div class="social-lang-row">
           <div class="icons-redes">
             <a *ngFor="let red of redes" [href]="red.url" target="_blank" rel="noopener noreferrer" [attr.aria-label]="red.nombre">
               <i [class]="red.icon"></i>
             </a>
           </div>
-
           <div class="language-selector-simple">
-            <p *ngFor="let lang of languages">
-              <!-- <span class="lang" [class.active]="currentLang === lang.code" (click)="selectLanguage(lang.code)">
-                {{ lang.label }}
-              </span> -->
-            </p>
+            <p *ngFor="let lang of languages"></p>
           </div>
         </div>
       </div>
@@ -90,7 +86,7 @@
       <a routerLink="/home">
         <img [src]="logoActual" class="logo" alt="Terelion logo" />
       </a>
-    </div> 
+    </div>
 
     <div class="logo-green" *ngIf="(isProductPage || isContactPage) && !isMobileView && !showProductos && !showAbout">
       <div class="logo-pag">
@@ -101,51 +97,40 @@
     </div>
   </div>
 
-  <div class="nav-right">
-    <!-- <div class="right-item language-selector" *ngIf="!isMobileView">
-      <button class="language-btn" (click)="toggleLangDropdown()">
-        <span class="label-text">{{ currentLanguageLabel }}</span>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
-          <circle cx="12" cy="12" r="10"></circle>
-          <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-        </svg>
-      </button>
+  <div class="nav-right" [class.mega-active]="showProductos || showAbout">
 
-      <div class="lang-overlay" *ngIf="langDropdownOpen" (click)="closeLangDropdown()"></div>
-
-      <div class="language-dropdown" *ngIf="langDropdownOpen" (mouseleave)="closeLangDropdown()">
-        <button *ngFor="let lang of languages" (click)="selectLanguage(lang.code)" [class.active]="currentLang === lang.code">
-          {{ lang.label }}
-        </button>
-      </div>
-    </div> -->
-
-    <div class="right-item search-trigger" (click)="toggleSearch()">
+    <!-- ✅ BUSCADOR DESKTOP -->
+    <div class="right-item search-trigger">
       <input
         type="text"
         class="search-input"
         [placeholder]="navbarData.buscarPlaceholder"
-        [class.mega-menu-active]="showProductos || showAbout"
-        *ngIf="!isMobileView || searchOpen"
+        *ngIf="!isMobileView"
+        [(ngModel)]="searchQuery"
+        (keydown)="ejecutarBusqueda($event)"
       />
-      <svg width="24" height="24" viewBox="0 0 24 24"
-        fill="none" stroke="white" stroke-width="2">
+      <svg (click)="isMobileView ? toggleSearch() : ejecutarBusqueda()"
+           width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2"
+           style="cursor: pointer;">
         <circle cx="11" cy="11" r="8"></circle>
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
       </svg>
     </div>
 
+    <!-- ✅ BUSCADOR MOBILE OVERLAY -->
     <div class="search-overlay" [class.active]="searchOpen">
       <div class="search-container-inner">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
           <circle cx="11" cy="11" r="8"></circle>
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>    
-        <input 
-          type="text" 
-          class="search-input-field" 
+        </svg>
+        <input
+          type="text"
+          class="search-input-field"
           [placeholder]="navbarData.buscarPlaceholder"
-          autofocus 
+          [(ngModel)]="searchQuery"
+          (keydown)="ejecutarBusqueda($event)"
+          autofocus
         />
         <button class="close-search-btn" (click)="toggleSearch()">
           <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="square">
@@ -155,26 +140,24 @@
         </button>
       </div>
     </div>
+
   </div>
 </nav>
 
 <!-- MEGA MENU PRODUCTOS -->
-<div class="mega-menu-wrapper" [class.show]="showProductos" (mouseleave)="cerrarMegaMenu()">
+<div #megaProductos class="mega-menu-wrapper" [class.show]="showProductos">
   <div class="container">
     <div class="menu-header">
       <h2>{{ navbarData.productosLabel }}</h2>
     </div>
-
     <div class="grid-layout">
       <div class="column" *ngFor="let categoria of productosMenu">
-        <a routerLink="/productos/general" (click)="cerrarMenusAlNavegar()">
+        <a [routerLink]="categoria.ruta" (click)="cerrarMenusAlNavegar()">
           <h3 class="col-title">{{ categoria.titulo }}</h3>
         </a>
         <ul class="link-list">
           <li *ngFor="let item of categoria.items">
-            <a [routerLink]="item.ruta" (click)="cerrarMenusAlNavegar()">
-              {{ item.nombre }}
-            </a>
+            <a [routerLink]="item.ruta" (click)="cerrarMenusAlNavegar()">{{ item.nombre }}</a>
           </li>
         </ul>
       </div>
@@ -183,7 +166,7 @@
 </div>
 
 <!-- MEGA MENU ABOUT -->
-<div class="mega-menu-wrapper" [class.show]="showAbout" (mouseleave)="cerrarMegaAbout()">
+<div #megaAbout class="mega-menu-wrapper" [class.show]="showAbout">
   <div class="container">
     <div class="grid-layout">
       <div class="column">
@@ -193,6 +176,6 @@
           </li>
         </ul>
       </div>
-    </div> 
+    </div>
   </div>
 </div>

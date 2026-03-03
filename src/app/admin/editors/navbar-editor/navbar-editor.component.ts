@@ -1,7 +1,8 @@
 // navbar-editor.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 // Angular Material
 import { MatCardModule } from '@angular/material/card';
@@ -34,98 +35,113 @@ import { NavbarData } from '../../../models/navbar.model';
   templateUrl: './navbar-editor.component.html',
   styleUrls: ['./navbar-editor.component.css']
 })
-export class NavbarEditorComponent implements OnInit {
+export class NavbarEditorComponent implements OnInit, OnDestroy {
   form!: FormGroup;
   originalData!: NavbarData;
   showSuccessMessage = false;
 
+  /** Vista de solo lectura del menú de productos (viene del navbar observable) */
+  productosMenuReadonly: { titulo: string; ruta?: string; items?: { nombre: string; ruta?: string }[] }[] = [];
+
+  private subs = new Subscription();
+
   constructor(
-    private navbarService: NavbarService, 
+    private navbarService: NavbarService,
     private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
     this.resetForm();
+
+    // Escuchar cambios del navbar para actualizar la vista de solo lectura
+    this.subs.add(
+      this.navbarService.navbarData$.subscribe(data => {
+        this.productosMenuReadonly = data?.productosMenu ?? [];
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
   }
 
   trackByIndex(index: number): number {
     return index;
   }
 
-  // Helpers para títulos en expansion panels
+  // ─── Títulos para expansion panels ────────────────────────────────────────
+
   getAboutItemTitle(index: number): string {
-    const item = this.aboutMenuArray.at(index);
-    return item?.get('nombre')?.value || '';
+    return this.aboutMenuArray.at(index)?.get('nombre')?.value || '';
   }
 
   getSocialTitle(index: number): string {
-    const item = this.redesArray.at(index);
-    return item?.get('nombre')?.value || '';
+    return this.redesArray.at(index)?.get('nombre')?.value || '';
   }
 
-  getCategoryTitle(index: number): string {
-    const category = this.productosMenuArray.at(index);
-    return category?.get('titulo')?.value || '';
-  }
-
+  // ─── Iconos sociales ──────────────────────────────────────────────────────
 
   iconosSociales = [
-  { class: 'bi bi-facebook',  nombre: 'Facebook' },
-  { class: 'bi bi-instagram', nombre: 'Instagram' },
-  { class: 'bi bi-twitter-x', nombre: 'X / Twitter' },
-  { class: 'bi bi-linkedin',  nombre: 'LinkedIn' },
-  { class: 'bi bi-youtube',   nombre: 'YouTube' },
-  { class: 'bi bi-tiktok',    nombre: 'TikTok' },
-  { class: 'bi bi-whatsapp',  nombre: 'WhatsApp' },
-];
+    { class: 'bi bi-facebook',  nombre: 'Facebook' },
+    { class: 'bi bi-instagram', nombre: 'Instagram' },
+    { class: 'bi bi-twitter-x', nombre: 'X / Twitter' },
+    { class: 'bi bi-linkedin',  nombre: 'LinkedIn' },
+    { class: 'bi bi-youtube',   nombre: 'YouTube' },
+    { class: 'bi bi-tiktok',    nombre: 'TikTok' },
+    { class: 'bi bi-whatsapp',  nombre: 'WhatsApp' },
+  ];
 
-selectIcon(index: number, iconClass: string) {
-  this.redesArray.at(index).get('icon')?.setValue(iconClass);
-}
+  selectIcon(index: number, iconClass: string) {
+    this.redesArray.at(index).get('icon')?.setValue(iconClass);
+  }
 
-onLogoSelected(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  const file = input.files?.[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    this.form.get('logoActual')?.setValue(e.target?.result as string);
-  };
-  reader.readAsDataURL(file);
-}
+  // ─── Logo ─────────────────────────────────────────────────────────────────
 
-onLogoDrop(event: DragEvent): void {
-  event.preventDefault();
-  const file = event.dataTransfer?.files[0];
-  if (!file) return;
-  this.onLogoSelected({ target: { files: [file] } } as any);
-}
+  onLogoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.form.get('logoActual')?.setValue(e.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+  }
 
-onDragOver(event: DragEvent): void {
-  event.preventDefault();
-}
+  onLogoDrop(event: DragEvent): void {
+    event.preventDefault();
+    const file = event.dataTransfer?.files[0];
+    if (!file) return;
+    this.onLogoSelected({ target: { files: [file] } } as any);
+  }
 
-  // ================= GUARDAR =================
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+  }
+
+  // ─── Guardar ──────────────────────────────────────────────────────────────
+
   saveChanges() {
     if (this.form.valid) {
       const v = this.form.value;
+
+      // Preservar el productosMenu actual (no se edita desde aquí)
+      const currentNavbar = this.navbarService.getNavbar();
+
       const updated: NavbarData = {
-        productosLabel: v.productosLabel,
-        aboutLabel: v.aboutLabel,
-        contactoLabel: v.contactoLabel,
-        contactoRuta: v.contactoRuta,
-        siguenos: v.siguenos,
+        productosLabel:    v.productosLabel,
+        aboutLabel:        v.aboutLabel,
+        contactoLabel:     v.contactoLabel,
+        contactoRuta:      v.contactoRuta,
+        siguenos:          v.siguenos,
         buscarPlaceholder: v.buscarPlaceholder,
-        logoActual: v.logoActual,
+        logoActual:        v.logoActual,
         aboutMenu: v.aboutMenu.map((i: any) => ({ nombre: i.nombre, ruta: i.ruta })),
-        redes: v.redes.map((r: any) => ({ nombre: r.nombre, icon: r.icon, url: r.url })),
-        productosMenu: v.productosMenu.map((c: any) => ({
-          titulo: c.titulo,
-          ruta: c.ruta,
-          items: c.items.map((it: any) => ({ nombre: it.nombre, ruta: it.ruta }))
-        }))
+        redes:     v.redes.map((r: any) => ({ nombre: r.nombre, icon: r.icon, url: r.url })),
+        // ← Se preserva, no se modifica desde este editor
+        productosMenu: currentNavbar.productosMenu
       };
-      
+
       this.navbarService.updateNavbar(updated);
       this.showSuccessMessage = true;
       setTimeout(() => this.showSuccessMessage = false, 3000);
@@ -133,38 +149,32 @@ onDragOver(event: DragEvent): void {
     }
   }
 
-  // ================= RESET =================
+  // ─── Reset ────────────────────────────────────────────────────────────────
+
   resetForm() {
     const data = this.navbarService.getNavbar();
     this.originalData = JSON.parse(JSON.stringify(data));
-    
+
     this.form = this.fb.group({
-      productosLabel: [data.productosLabel],
-      aboutLabel: [data.aboutLabel],
-      contactoLabel: [data.contactoLabel],
-      contactoRuta: [data.contactoRuta],
-      siguenos: [data.siguenos],
+      productosLabel:    [data.productosLabel],
+      aboutLabel:        [data.aboutLabel],
+      contactoLabel:     [data.contactoLabel],
+      contactoRuta:      [data.contactoRuta],
+      siguenos:          [data.siguenos],
       buscarPlaceholder: [data.buscarPlaceholder],
-      logoActual: [data.logoActual],
+      logoActual:        [data.logoActual],
       aboutMenu: this.fb.array(
         data.aboutMenu.map(i => this.fb.group({ nombre: [i.nombre], ruta: [i.ruta || ''] }))
       ),
       redes: this.fb.array(
         data.redes.map(r => this.fb.group({ nombre: [r.nombre], icon: [r.icon], url: [r.url] }))
-      ),
-      productosMenu: this.fb.array(
-        data.productosMenu.map(c => this.fb.group({
-          titulo: [c.titulo],
-          ruta: [c.ruta || ''],
-          items: this.fb.array(
-            c.items.map(it => this.fb.group({ nombre: [it.nombre], ruta: [it.ruta || ''] }))
-          )
-        }))
       )
+      // productosMenu no se incluye en el form — se gestiona desde Product General Editor
     });
   }
 
-  // ================= GETTERS =================
+  // ─── Getters ──────────────────────────────────────────────────────────────
+
   get aboutMenuArray(): FormArray {
     return this.form.get('aboutMenu') as FormArray;
   }
@@ -173,11 +183,8 @@ onDragOver(event: DragEvent): void {
     return this.form.get('redes') as FormArray;
   }
 
-  get productosMenuArray(): FormArray {
-    return this.form.get('productosMenu') as FormArray;
-  }
+  // ─── About Menu ───────────────────────────────────────────────────────────
 
-  // ================= ABOUT MENU =================
   addAboutItem() {
     this.aboutMenuArray.push(this.fb.group({ nombre: [''], ruta: [''] }));
   }
@@ -186,39 +193,13 @@ onDragOver(event: DragEvent): void {
     this.aboutMenuArray.removeAt(index);
   }
 
-  // ================= REDES SOCIALES =================
+  // ─── Redes Sociales ───────────────────────────────────────────────────────
+
   addSocialItem() {
     this.redesArray.push(this.fb.group({ nombre: [''], icon: [''], url: [''] }));
   }
 
   removeSocialItem(index: number) {
     this.redesArray.removeAt(index);
-  }
-
-  // ================= PRODUCTOS MENU =================
-  addProductCategory() {
-    this.productosMenuArray.push(
-      this.fb.group({
-        titulo: [''],
-        ruta: [''],
-        items: this.fb.array([])
-      })
-    );
-  }
-
-  removeProductCategory(index: number) {
-    this.productosMenuArray.removeAt(index);
-  }
-
-  getItemsArray(categoryIndex: number): FormArray {
-    return this.productosMenuArray.at(categoryIndex).get('items') as FormArray;
-  }
-
-  addProductItem(categoryIndex: number) {
-    this.getItemsArray(categoryIndex).push(this.fb.group({ nombre: [''], ruta: [''] }));
-  }
-
-  removeProductItem(categoryIndex: number, itemIndex: number) {
-    this.getItemsArray(categoryIndex).removeAt(itemIndex);
   }
 }

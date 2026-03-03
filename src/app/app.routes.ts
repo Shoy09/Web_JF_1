@@ -27,10 +27,12 @@ import { MasInfoEditorComponent } from './admin/editors/mas-info-editor/mas-info
 import { HistoryEditorComponent } from './admin/editors/history-editor/history-editor.component';
 import { NoticiasEditorComponent } from './admin/editors/noticias-editor/noticias-editor.component';
 import { RegistrarComponent } from './principales/registrar/registrar.component';
+import { ProfileComponent } from './admin/admin/profile/profile.component';
 
 // Guard
-import { authGuard } from '../app/principales/login/Auth.guard'; // ← ajusta la ruta si es diferente
-import { ProfileComponent } from './admin/admin/profile/profile.component';
+import { authGuard } from '../app/principales/login/Auth.guard';
+import { SearchResultsComponent } from './components/search-results/search-results.component';
+import { EmailConfigEditorComponent } from './admin/editors/Emailconfig-editor/Emailconfig-editor.component';
 
 export const routes: Routes = [
 
@@ -43,39 +45,46 @@ export const routes: Routes = [
       { path: 'home', component: HomeComponent },
       { path: 'acerca-de', component: AcercaDeComponent },
       { path: 'his', component: HistoryComponent },
-      { path: 'productos', component: VistaProductosComponent },
-      { path: 'productos/general', component: ProductoGeneralComponent },
+
+      // ✅ Productos — mismo patrón que noticias
+      { path: 'productos/:categoria/:slug', component: VistaProductosComponent },
+      { path: 'productos/:slug', component: ProductoGeneralComponent },
+
+      // ✅ Noticias — primero la ruta específica, luego la general
+      { path: 'noticias/:slug', component: NoticiasComponent },
+      { path: 'noticias', component: NoticiasComponent },
+
       { path: 'mas-info', component: MasInfoComponent },
       { path: 'contactos', component: ContactComponent },
-      { path: 'noticias', component: NoticiasComponent },
       { path: 'login', component: LoginComponent },
       { path: 'registrarse', component: RegistrarComponent },
+      { path: 'buscar', component: SearchResultsComponent },
+
     ]
   },
 
   // -------------------- Admin routes (protegidas) --------------------
   {
+    path: 'admin',
+    component: PrincipalAdminComponent,
+    canActivate: [authGuard],
+    children: [
+      { path: 'home', component: HomeEditorComponent },
+      { path: 'about', component: AboutEditorComponent },
+      { path: 'contact', component: ContactEditorComponent },
+      { path: 'footer', component: FooterEditorComponent },
+      { path: 'navbar', component: NavbarEditorComponent },
+      { path: 'general-product', component: ProductGeneralEditorComponent },
+      { path: 'products', component: ProductsEditorComponent },
+      { path: 'mas-info', component: MasInfoEditorComponent },
+      { path: 'history', component: HistoryEditorComponent },
+      { path: 'noticias', component: NoticiasEditorComponent },
+      { path: 'profile', component: ProfileComponent },
+      { path: 'email-config', component: EmailConfigEditorComponent },
 
-  path: 'admin',
-  component: PrincipalAdminComponent,
-  canActivate: [authGuard], // ← solo aquí es suficiente
-  children: [
-    { path: 'home', component: HomeEditorComponent }, // ← sin canActivate
-    { path: 'about', component: AboutEditorComponent },
-    { path: 'contact', component: ContactEditorComponent },
-    { path: 'footer', component: FooterEditorComponent },
-    { path: 'navbar', component: NavbarEditorComponent },
-    { path: 'general-product', component: ProductGeneralEditorComponent },
-    { path: 'products', component: ProductsEditorComponent },
-    { path: 'mas-info', component: MasInfoEditorComponent },
-    { path: 'history', component: HistoryEditorComponent },
-    { path: 'noticias', component: NoticiasEditorComponent },
-    { path: 'profile', component: ProfileComponent },
+    ]
+  },
 
-  ]
-},
-
-  // Redirigir cualquier ruta no encontrada a home o login
   { path: '**', redirectTo: 'home' }
 ];
 

@@ -1,5 +1,4 @@
 <div class="editor-container">
-
   <h1>
     <span></span>
     Editor de Footer
@@ -12,7 +11,6 @@
     <mat-tab label="Contacto & Logo">
       <mat-card class="tab-card">
         <form [formGroup]="footerForm">
-
           <h3>Información de Contacto</h3>
           <div class="form-grid">
             <mat-form-field appearance="outline" class="full-width">
@@ -26,32 +24,22 @@
           </div>
 
           <h3 style="margin-top: 1.5rem;">Logo Central</h3>
-          <div class="form-grid">
-            <div class="full-width">
-              <div class="upload-row">
-                <img *ngIf="footerForm.get('logoCentro')?.value"
-                     [src]="footerForm.get('logoCentro')?.value"
-                     style="height:80px; border-radius:4px; margin-bottom:8px; display:block;">
-                <input type="file" accept="image/*" (change)="onLogoSelected($event)">
-                <div class="dropzone"
-                     (dragover)="onDragOver($event)"
-                     (drop)="onLogoDrop($event)">
-                  <mat-icon>upload</mat-icon>
-                  Arrastra aquí el logo o selecciónalo
-                </div>
-              </div>
+          <div class="upload-row">
+            <img *ngIf="footerForm.get('logoCentro')?.value"
+                 [src]="footerForm.get('logoCentro')?.value"
+                 style="height:80px; border-radius:4px; margin-bottom:8px; display:block;">
+            <input type="file" accept="image/*" (change)="onLogoSelected($event)">
+            <div class="dropzone" (dragover)="onDragOver($event)" (drop)="onLogoDrop($event)">
+              <mat-icon>upload</mat-icon> Arrastra aquí el logo o selecciónalo
             </div>
           </div>
 
           <h3 style="margin-top: 1.5rem;">Copyright del Footer</h3>
-          <div class="form-grid">
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>© Texto copyright</mat-label>
-              <input matInput formControlName="copyright" placeholder="© Texto copyright">
-              <mat-hint>Este texto aparece abajo del footer</mat-hint>
-            </mat-form-field>
-          </div>
-
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>© Texto copyright</mat-label>
+            <input matInput formControlName="copyright" placeholder="© Texto copyright">
+            <mat-hint>Este texto aparece abajo del footer</mat-hint>
+          </mat-form-field>
         </form>
       </mat-card>
     </mat-tab>
@@ -74,70 +62,28 @@
               <div [formGroupName]="i" class="form-grid" style="margin-top: 1rem;">
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Label</mat-label>
-                  <input matInput formControlName="label" placeholder="Acerca de este sitio web">
+                  <input matInput formControlName="label">
                 </mat-form-field>
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Ruta</mat-label>
-                  <input matInput formControlName="ruta" placeholder="/about-this-website">
+                  <input matInput formControlName="ruta">
                 </mat-form-field>
                 <div class="full-width panel-actions">
                   <button mat-raised-button color="warn" type="button" (click)="removeMenuItem(i)">
-                    <mat-icon>delete</mat-icon> Eliminar item
+                    <mat-icon>delete</mat-icon> Eliminar
                   </button>
                 </div>
               </div>
             </mat-expansion-panel>
           </div>
           <button mat-raised-button color="primary" type="button" (click)="addMenuItem()">
-            <mat-icon>add</mat-icon> Agregar nuevo item al menú
+            <mat-icon>add</mat-icon> Agregar item
           </button>
         </form>
       </mat-card>
     </mat-tab>
 
-    <!-- TAB: Noticias -->
-    <mat-tab label="Noticias">
-      <mat-card class="tab-card">
-        <h3>Noticias</h3>
-        <form [formGroup]="footerForm">
-          <div formArrayName="noticias">
-            <mat-expansion-panel
-              *ngFor="let noticia of noticiasArray.controls; let i = index; trackBy: trackByIndex"
-              class="expansion-item">
-              <mat-expansion-panel-header>
-                <mat-panel-title>
-                  <mat-icon>article</mat-icon>
-                  {{ noticia.get('titulo')?.value || 'Nueva noticia' }}
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <div [formGroupName]="i" class="form-grid" style="margin-top: 1rem;">
-                <mat-form-field appearance="outline" class="full-width">
-                  <mat-label>Fecha</mat-label>
-                  <input matInput formControlName="fecha" placeholder="2022-02-25">
-                </mat-form-field>
-                <mat-form-field appearance="outline" class="full-width">
-                  <mat-label>Título</mat-label>
-                  <input matInput formControlName="titulo" placeholder="Título de la noticia">
-                </mat-form-field>
-                <mat-form-field appearance="outline" class="full-width">
-                  <mat-label>URL (opcional)</mat-label>
-                  <input matInput formControlName="url" placeholder="/noticias/titulo">
-                </mat-form-field>
-                <div class="full-width panel-actions">
-                  <button mat-raised-button color="warn" type="button" (click)="removeNoticia(i)">
-                    <mat-icon>delete</mat-icon> Eliminar noticia
-                  </button>
-                </div>
-              </div>
-            </mat-expansion-panel>
-          </div>
-          <button mat-raised-button color="primary" type="button" (click)="addNoticia()">
-            <mat-icon>add</mat-icon> Agregar nueva noticia
-          </button>
-        </form>
-      </mat-card>
-    </mat-tab>
-
+ 
     <!-- TAB: Redes Sociales -->
     <mat-tab label="Redes Sociales">
       <mat-card class="tab-card">
@@ -153,9 +99,7 @@
                   {{ red.get('nombre')?.value || 'Red social' }}
                 </mat-panel-title>
               </mat-expansion-panel-header>
-
               <div [formGroupName]="i" class="form-grid" style="margin-top: 1rem;">
-
                 <div class="full-width">
                   <label style="font-size:13px; color:#666; margin-bottom:8px; display:block;">Selecciona un icono</label>
                   <div class="icon-selector">
@@ -168,27 +112,24 @@
                     </div>
                   </div>
                 </div>
-
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Nombre</mat-label>
                   <input matInput formControlName="nombre" placeholder="Facebook">
                 </mat-form-field>
-
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>URL</mat-label>
                   <input matInput formControlName="url" placeholder="https://facebook.com/...">
                 </mat-form-field>
-
                 <div class="full-width panel-actions">
                   <button mat-raised-button color="warn" type="button" (click)="removeRed(i)">
-                    <mat-icon>delete</mat-icon> Eliminar red social
+                    <mat-icon>delete</mat-icon> Eliminar
                   </button>
                 </div>
               </div>
             </mat-expansion-panel>
           </div>
           <button mat-raised-button color="primary" type="button" (click)="addRed()">
-            <mat-icon>add</mat-icon> Agregar nueva red social
+            <mat-icon>add</mat-icon> Agregar red social
           </button>
         </form>
       </mat-card>
@@ -206,5 +147,4 @@
   <div *ngIf="showSuccessMessage" class="notification">
     ✅ Footer actualizado correctamente
   </div>
-
 </div>

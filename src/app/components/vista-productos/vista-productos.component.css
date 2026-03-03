@@ -63,9 +63,11 @@
     text-decoration: none;
     font-weight: bold;
     font-size: 1rem;
+    border: none;
     border-bottom: 2px solid #2e7d32;
     align-self: flex-start;
     padding-bottom: 5px;
+    background: none;
 }
 
 .product-gallery {
@@ -254,4 +256,88 @@
     grid-template-columns: 1fr;
   }
 
+}
+
+/* ═══════════════════════════════════════════════════
+   MODAL DE CONTACTO
+════════════════════════════════════════════════════ */
+
+.contact-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 9000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 20px;
+  box-sizing: border-box;
+  opacity: 0;
+  visibility: hidden;
+  overflow-y: auto;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.contact-modal-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.contact-modal-box {
+  background: #fff;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 1000px;
+  overflow: visible !important;
+  position: relative;
+  transform: translateY(24px);
+  transition: transform 0.3s ease;
+  align-self: flex-start;
+}
+
+.contact-modal-overlay.open .contact-modal-box {
+  transform: translateY(0);
+}
+
+.contact-modal-box ::ng-deep .contact-container {
+  padding: 40px 5% 40px !important;
+}
+
+.contact-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(0,0,0,0.06);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #444;
+  z-index: 10;
+  transition: background 0.2s, color 0.2s;
+}
+
+.contact-modal-close:hover {
+  background: rgba(0,0,0,0.14);
+  color: #000;
+}
+
+.contact-modal-box app-contact {
+  display: block;
+  width: 100%;
+}
+
+@media (max-width: 680px) {
+  .contact-modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .contact-modal-box {
+    border-radius: 12px 12px 0 0;
+  }
 }

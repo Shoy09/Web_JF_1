@@ -1,76 +1,68 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 import { GeneralProductData } from '../models/general-product';
 import { API_BASE_URL } from '../api.config';
 
 @Injectable({ providedIn: 'root' })
 export class GeneralProductService {
-  private readonly STORAGE_KEY = 'generalProductData';
 
-  private _data: GeneralProductData = this.getDefaultData();
-  public data$ = new BehaviorSubject<GeneralProductData>(this._data);
+  private readonly API = `${API_BASE_URL}/general-product-page`;
+  private selectedKey: string | null = null;
 
-  constructor(private http: HttpClient) { // ✅ Sin AuthService
-    const saved = localStorage.getItem(this.STORAGE_KEY);
-    if (saved) {
-      try {
-        this._data = JSON.parse(saved);
-      } catch {
-        this._data = this.getDefaultData();
-      }
-    }
-    this.data$.next(this._data);
-    this.loadFromBackend();
+  private cache: Record<string, GeneralProductData> = {};
+
+  constructor(private http: HttpClient) {}
+
+  // ─── Selección activa ─────────────────────────────────────────────────────
+
+  selectCategory(ruta: string): void {
+    this.selectedKey = ruta;
   }
 
-  getData(): GeneralProductData {
-    return JSON.parse(JSON.stringify(this._data));
+  getSelectedKey(): string | null {
+    return this.selectedKey;
   }
 
-updateData(data: GeneralProductData) {
-  this._data = JSON.parse(JSON.stringify(data));
-  localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this._data));
-  this.data$.next(this._data);
+  // ─── Carga desde backend ──────────────────────────────────────────────────
 
-  // ✅ Las imágenes base64 las maneja el backend con Cloudinary igual que Home
-  this.http.put(`${API_BASE_URL}/general-product-page`, this._data)
-    .toPromise()
-    .catch(() => {});
-}
-
-  reset() {
-    this._data = this.getDefaultData();
-    localStorage.removeItem(this.STORAGE_KEY);
-    this.data$.next(this._data);
+  async fetchDataForKey(ruta: string): Promise<GeneralProductData> {
+    const data = await firstValueFrom(
+      this.http.get<GeneralProductData>(this.API, {
+        params: { categoryKey: ruta }
+      })
+    );
+    this.cache[ruta] = data;
+    return data;
   }
 
-  private async loadFromBackend(): Promise<void> {
-    try {
-      const res = await this.http.get<GeneralProductData>(`${API_BASE_URL}/general-product-page`).toPromise();
-      if (res) {
-        this._data = res;
-        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this._data));
-        this.data$.next(this._data);
-      }
-    } catch {}
-  }
-
-  private getDefaultData(): GeneralProductData {
-    return {
-      headerData: {
-        titulo: 'BROCAS TRICÓNICAS',
-        descripcion: 'Soluciones diseñadas para rendimiento y durabilidad.',
-        breadcrumbs: ['PRODUCTOS', 'BROCAS']
-      },
-      infoSection: {
-        texto: 'Conoce nuestra gama de productos y encuentra el ideal para tu operación.',
-        boton: { label: 'CONTÁCTANOS', link: '/contactos' }
-      },
-      products: [
-        { title: 'Producto 1', image: 'assets/products/bit1.png', link: '#' },
-        { title: 'Producto 2', image: 'assets/products/bit2.png', link: '#' }
-      ]
+  getDataForKey(ruta: string): GeneralProductData {
+    return this.cache[ruta] ?? {
+      headerData: { titulo: '', descripcion: '', breadcrumbs: [] },
+      infoSection: { texto: '', boton: { label: '', link: '' } },
+      products: []
     };
+  }
+
+  // ─── Guardar en backend ───────────────────────────────────────────────────
+
+  async updateDataForKey(ruta: string, data: GeneralProductData): Promise<void> {
+    const updated = await firstValueFrom(
+      this.http.put<GeneralProductData>(this.API, data, {
+        params: { categoryKey: ruta }
+      })
+    );
+    this.cache[ruta] = updated;
+  }
+
+  // ─── Eliminar en backend ──────────────────────────────────────────────────
+
+  async deleteDataForKey(ruta: string): Promise<void> {
+    await firstValueFrom(
+      this.http.delete(this.API, {
+        params: { categoryKey: ruta }
+      })
+    );
+    delete this.cache[ruta];
   }
 }

@@ -110,6 +110,11 @@ img[src*="icon"] {
   height: var(--icon-size-small);
 }
 
+.cdk-overlay-container {
+  z-index: 99999 !important;
+  position: fixed !important;
+}
+
 /* ==========================================================================
    MEDIA QUERIES - Responsive design
    ========================================================================== */

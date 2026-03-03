@@ -1,32 +1,30 @@
 <div class="footer-container">
 
-<!-- NOTICIAS -->
+  <!-- NOTICIAS -->
 <section class="footer-news">
-  <div #newsCarousel class="footer-news__content carrusel-mobile">
-    <article class="footer-news__item" *ngFor="let news of footerData.noticias">
+  <div #newsCarousel 
+       class="footer-news__content carrusel-mobile"
+       [ngClass]="'noticias-' + (footerData.noticias | slice:0:6).length">
+    <article class="footer-news__item"
+             *ngFor="let news of footerData.noticias | slice:0:6"
+             (click)="news.url ? navegarA(news.url) : null">
       <div class="footer-news__date">— {{ news.fecha }}</div>
-      <h5>
-        <a [href]="news.url">{{ news.titulo }}</a>
-      </h5>
+      <h5>{{ news.titulo }}</h5>
     </article>
   </div>
- 
-  <!-- Indicadores tipo líneas -->
+
   <div class="news-indicators">
-    <span 
-      *ngFor="let news of footerData.noticias; let i = index"
+    <span
+      *ngFor="let news of footerData.noticias | slice:0:6; let i = index"
       [class.active]="i === currentIndex">
     </span>
   </div>
 </section>
 
-
-
   <!-- FOOTER PRINCIPAL -->
   <footer class="footer">
-    <!-- Imagen de fondo movida del CSS al HTML -->
     <img src="/mountain-footer--green.png" class="footer-bg" alt="Footer background" />
-    
+
     <div class="footer__content">
       <!-- IZQUIERDA -->
       <div class="footer__left">

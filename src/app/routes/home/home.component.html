@@ -50,8 +50,8 @@
     <p *ngFor="let paragraph of about.paragraphs">
       {{ paragraph }}
     </p>
-    <a [href]="about.linkUrl" class="learn-more-link" [routerLink]="about.linkUrl">
-      {{ about.linkText }}
-    </a>
+<a class="learn-more-link" [routerLink]="['/his']">
+  {{ about.linkText }}
+</a>
   </div>
 </section>

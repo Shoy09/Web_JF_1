@@ -9,7 +9,7 @@
     <div class="region-select-wrapper">
       <mat-form-field appearance="outline" class="region-select">
         <mat-label>{{ content.header.regionLabel }}</mat-label>
-        <input
+        <input 
           matInput
           type="text"
           [placeholder]="content.header.regionPlaceholder"
@@ -32,7 +32,7 @@
         </button>
         
         <mat-autocomplete
-          #auto="matAutocomplete"
+          #auto="matAutocomplete" 
           [displayWith]="displayFn"
           (optionSelected)="selectRegion($event.option.value)"
           class="region-autocomplete"
@@ -127,82 +127,78 @@
     </div>
 
     <!-- FORM -->
-    <form class="contact-form">
-      <div class="row">
-        <!-- Primera fila: Nombre y Apellido -->
-        <mat-form-field appearance="outline">
-          <mat-label>{{ content.body.formFields[0].label }}</mat-label>
-          <input 
-            matInput 
-            [placeholder]="content.body.formFields[0].placeholder" 
-            [required]="content.body.formFields[0].required" 
-          />
-        </mat-form-field>
+<form class="contact-form" [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+  <div class="row">
+    <mat-form-field appearance="outline">
+      <mat-label>{{ content.body.formFields[0].label }}</mat-label>
+      <input matInput formControlName="firstName"
+             [placeholder]="content.body.formFields[0].placeholder" />
+      <mat-error *ngIf="contactForm.get('firstName')?.hasError('required')">
+        Este campo es requerido
+      </mat-error>
+    </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>{{ content.body.formFields[1].label }}</mat-label>
-          <input 
-            matInput 
-            [placeholder]="content.body.formFields[1].placeholder" 
-            [required]="content.body.formFields[1].required" 
-          />
-        </mat-form-field>
-      </div>
+    <mat-form-field appearance="outline">
+      <mat-label>{{ content.body.formFields[1].label }}</mat-label>
+      <input matInput formControlName="lastName"
+             [placeholder]="content.body.formFields[1].placeholder" />
+      <mat-error *ngIf="contactForm.get('lastName')?.hasError('required')">
+        Este campo es requerido
+      </mat-error>
+    </mat-form-field>
+  </div>
 
-      <div class="row">
-        <!-- Segunda fila: Email y Teléfono -->
-        <mat-form-field appearance="outline">
-          <mat-label>{{ content.body.formFields[2].label }}</mat-label>
-          <input 
-            matInput 
-            [type]="content.body.formFields[2].type || 'text'"
-            [placeholder]="content.body.formFields[2].placeholder" 
-            [required]="content.body.formFields[2].required" 
-          />
-        </mat-form-field>
+  <div class="row">
+    <mat-form-field appearance="outline">
+      <mat-label>{{ content.body.formFields[2].label }}</mat-label>
+      <input matInput formControlName="email" type="email"
+             [placeholder]="content.body.formFields[2].placeholder" />
+      <mat-error *ngIf="contactForm.get('email')?.hasError('required')">
+        Este campo es requerido
+      </mat-error>
+      <mat-error *ngIf="contactForm.get('email')?.hasError('email')">
+        Email inválido
+      </mat-error>
+    </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>{{ content.body.formFields[3].label }}</mat-label>
-          <input 
-            matInput 
-            [placeholder]="content.body.formFields[3].placeholder" 
-            [required]="content.body.formFields[3].required" 
-          />
-        </mat-form-field>
-      </div>
+    <mat-form-field appearance="outline">
+      <mat-label>{{ content.body.formFields[3].label }}</mat-label>
+      <input matInput formControlName="phone"
+             [placeholder]="content.body.formFields[3].placeholder" />
+    </mat-form-field>
+  </div>
 
-      <!-- Campo Empresa -->
-      <mat-form-field appearance="outline" class="full">
-        <mat-label>{{ content.body.formFields[4].label }}</mat-label>
-        <input 
-          matInput 
-          [placeholder]="content.body.formFields[4].placeholder" 
-          [required]="content.body.formFields[4].required" 
-        />
-      </mat-form-field>
+  <mat-form-field appearance="outline" class="full">
+    <mat-label>{{ content.body.formFields[4].label }}</mat-label>
+    <input matInput formControlName="company"
+           [placeholder]="content.body.formFields[4].placeholder" />
+  </mat-form-field>
 
-      <!-- Campo Comentarios -->
-      <mat-form-field appearance="outline" class="full">
-        <mat-label>{{ content.body.formFields[5].label }}</mat-label>
-        <textarea
-          matInput
-          [rows]="content.body.formFields[5].rows || 6"
-          [placeholder]="content.body.formFields[5].placeholder"
-          [required]="content.body.formFields[5].required"
-        ></textarea>
-      </mat-form-field>
+  <mat-form-field appearance="outline" class="full">
+    <mat-label>{{ content.body.formFields[5].label }}</mat-label>
+    <textarea matInput formControlName="message" rows="6"
+              [placeholder]="content.body.formFields[5].placeholder"></textarea>
+    <mat-error *ngIf="contactForm.get('message')?.hasError('required')">
+      Este campo es requerido
+    </mat-error>
+  </mat-form-field>
 
-      <div class="actions">
-        <button mat-flat-button color="primary" class="send-button">
-          <mat-icon>send</mat-icon>
-          {{ content.body.sendButtonLabel }}
-        </button>
-      </div>
+  <!-- Aviso si no hay región -->
+  <p class="region-warning" *ngIf="!selectedRegion">
+    ⚠️ Selecciona una región para habilitar el formulario.
+  </p>
 
-      <p class="legal">
-        {{ content.body.legalText }}
-      </p>
-    </form>
+  <div class="actions">
+    <button mat-flat-button color="primary" class="send-button"
+            type="submit" [disabled]="!canSubmit">
+      <mat-spinner *ngIf="isSending" diameter="20" style="display:inline-block; margin-right:8px;"></mat-spinner>
+      <mat-icon *ngIf="!isSending">send</mat-icon>
+      {{ content.body.sendButtonLabel }}
+    </button>
+  </div>
+
+  <p class="legal">{{ content.body.legalText }}</p>
+</form>
   </div>
 </section>
 

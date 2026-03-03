@@ -1,4 +1,4 @@
-<div class="page-container">
+<div class="page-container" *ngIf="!isLoading && heroProduct">
 
   <main class="product-container">
     <section class="product-info">
@@ -6,37 +6,33 @@
         <span *ngFor="let crumb of heroProduct.breadcrumbs; let last = last">
           {{ crumb.label }}
           <span *ngIf="!last"> / </span>
-        </span> 
+        </span>
       </nav>
+
       <div class="info-product">
-      <h1 class="product-title">
-        {{ heroProduct.title }} –
-        <br>
-        
-        <span>{{ heroProduct.subtitle }}</span>
-      </h1>
-
-      <div class="description">
-        <p *ngFor="let desc of heroProduct.descriptions">
-          {{ desc }}
-        </p>
-      </div>
+        <h1 class="product-title">
+          {{ heroProduct.title }} –
+          <br>
+          <span>{{ heroProduct.subtitle }}</span>
+        </h1>
+        <div class="description">
+          <p *ngFor="let desc of heroProduct.descriptions">{{ desc }}</p>
+        </div>
       </div>
 
-      <a [href]="heroProduct.contactLink" class="cta-link">
+      <button class="cta-link" (click)="abrirModal()">
         COMUNÍQUESE CON NOSOTROS
-      </a>
+      </button>
     </section>
 
     <section class="product-gallery">
       <div class="main-image">
-        <img [src]="selectedImage" alt="Broca Ridgeback">
+        <img [src]="selectedImage" alt="Producto">
       </div>
-
       <div class="thumbnails">
-        <div 
-          *ngFor="let thumb of heroProduct.thumbnails" 
-          class="thumb" 
+        <div
+          *ngFor="let thumb of heroProduct.thumbnails"
+          class="thumb"
           [class.active]="selectedImage === thumb"
           (click)="changeImage(thumb)">
           <img [src]="thumb" alt="Vista de producto">
@@ -47,10 +43,9 @@
 
   <section class="features-section">
     <div class="features-grid-layout">
-      
+
       <div class="features-content">
         <h2>CARACTERÍSTICAS Y BENEFICIOS</h2>
-        
         <div class="features-list">
           <div class="feature-item" *ngFor="let feature of features">
             <h4>&rarr; {{ feature.title }}</h4>
@@ -61,23 +56,48 @@
 
       <div class="downloads-content">
         <h2>DESCARGABLES</h2>
-  <div class="download-card" *ngFor="let download of downloads">
-    <h3>{{ download.title }}</h3>
+        <div class="download-card" *ngFor="let download of downloads">
+          <h3>{{ download.title }}</h3>
           <div class="download-item">
-      <span>{{ download.description }}</span>
-      <!-- ✅ Agregar enlace de descarga -->
-      <a [href]="download.link" 
-         target="_blank" 
-         download
-         [class.disabled]="!download.link"
-         class="icon-download">
-        &#8595;
-      </a>
-    </div>
+            <span>{{ download.description }}</span>
+            <a [href]="download.link"
+               target="_blank"
+               download
+               [class.disabled]="!download.link"
+               class="icon-download">
+              &#8595;
+            </a>
+          </div>
         </div>
       </div>
 
     </div>
   </section>
 
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     MODAL DE CONTACTO
+     Embebe directamente el componente app-contact
+     para reutilizar toda su lógica y datos del servicio
+════════════════════════════════════════════════════ -->
+<div class="contact-modal-overlay"
+     [class.open]="modalAbierto"
+     (click)="cerrarModalAlFondo($event)"
+     cdkScrollable>
+
+  <div class="contact-modal-box" #modalBox>
+
+    <button class="contact-modal-close" (click)="cerrarModal()" aria-label="Cerrar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+
+    <!-- El componente de contacto completo, tal cual -->
+    <app-contact *ngIf="modalAbierto"></app-contact>
+
+  </div>
 </div>

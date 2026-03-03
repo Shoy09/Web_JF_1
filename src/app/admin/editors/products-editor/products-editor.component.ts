@@ -1,204 +1,334 @@
-import { Component, OnInit } from '@angular/core';
+// products-editor.component.ts
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { ProductService } from '../../../services/product.service';
+import { NavbarService } from '../../../services/navbar.service';
+import { GeneralProductService } from '../../../services/general-product.service';
+import { HeroProduct } from '../../../models/product.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatExpansionModule } from '@angular/material/expansion';
+import { MatInputModule } from '@angular/material/input';
+import { MatCardModule } from '@angular/material/card';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { RouterLink, ActivatedRoute } from '@angular/router';
 
-import { ProductService } from '../../../services/product.service';
-import { HeroProduct, Feature, Download } from '../../../models/product.model';
+interface NavbarCategory {
+  titulo: string;
+  ruta: string;
+}
 
 @Component({
-  selector: 'app-products-editor',
+  selector: 'app-product-editor',
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
-    MatTabsModule,
     MatCardModule,
+    MatTabsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule,
+    MatSelectModule,
     MatIconModule,
-    MatExpansionModule,
-    MatTooltipModule
+    MatButtonModule,
+    MatTooltipModule,
+    MatProgressSpinnerModule,
+    RouterLink
   ],
   templateUrl: './products-editor.component.html',
   styleUrls: ['./products-editor.component.css']
 })
-export class ProductsEditorComponent implements OnInit {
-  product!: HeroProduct;
-  originalProduct!: HeroProduct;
+export class ProductsEditorComponent implements OnInit, OnDestroy {
+
+  navbarCategories: NavbarCategory[] = [];
+  selectedCategoryKey: string | null = null;
+  selectedProductKey: string | null = null;
+  productsInCategory: { nombre: string; ruta: string }[] = [];
+
+  isLoading = false;
+  isLoadingProducts = false;
+  errorMessage: string | null = null;
   showSuccessMessage = false;
 
-  // Archivos
-  downloadsFiles: (File | null)[] = [];
-  mainImageFile: File | null = null;
-  thumbnailFiles: (File | null)[] = [];
+  product!: HeroProduct;
 
-  constructor(private productService: ProductService) {}
+  private _mainImageFile: File | null = null;
+  private _mainImageFileName = '';
+  private _thumbnailFiles: (File | null)[] = [];
+  private _thumbnailFileNames: string[] = [];
+  private _downloadFiles: (File | null)[] = [];
+  private _downloadFileNames: string[] = [];
 
-  ngOnInit(): void {
-    this.loadData();
-  }
+  private subs = new Subscription();
+  private _queryParamsApplied = false;
 
-  loadData(): void {
-    this.product = this.productService.getProduct();
-    this.originalProduct = JSON.parse(JSON.stringify(this.product));
+  constructor(
+    private productService: ProductService,
+    private navbarService: NavbarService,
+    private generalProductService: GeneralProductService,
+    private route: ActivatedRoute
+  ) {}
 
-    if (!this.product.downloads) this.product.downloads = [];
-    if (!this.product.features) this.product.features = [];
-    if (!this.product.descriptions) this.product.descriptions = [];
-    if (!this.product.thumbnails) this.product.thumbnails = [];
+  ngOnInit() {
+    const qCat = this.route.snapshot.queryParamMap.get('cat');
+    const qProd = this.route.snapshot.queryParamMap.get('prod');
 
-    this.downloadsFiles = Array(this.product.downloads.length).fill(null);
-    this.thumbnailFiles = Array(this.product.thumbnails.length).fill(null);
-    this.mainImageFile = null;
-  }
+    this.subs.add(
+      this.navbarService.navbarData$.subscribe(async navbar => {
+        this.navbarCategories = (navbar?.productosMenu ?? [])
+          .filter((cat: any) => !!cat.ruta)
+          .map((cat: any) => ({ titulo: cat.titulo, ruta: cat.ruta as string }));
 
-  trackByIndex(index: number): number {
-    return index;
-  }
+        if (qCat && this.navbarCategories.length > 0 && !this._queryParamsApplied) {
+          this._queryParamsApplied = true;
+          this.selectedCategoryKey = qCat;
+          this.productService.selectCategory(qCat);
+          await this.loadProductsForCategory(qCat);
 
-  // ================= GUARDAR =================
-  save(): void {
-    const hasFiles =
-      this.mainImageFile !== null ||
-      this.thumbnailFiles.some(f => f !== null) ||
-      this.downloadsFiles.some(f => f !== null);
+          if (qProd) {
+            // Forzar que aparezca en el dropdown aunque no esté en el grid
+            if (!this.productsInCategory.find(p => p.ruta === qProd)) {
+              this.productsInCategory = [
+                ...this.productsInCategory,
+                { nombre: qProd.split('/').pop() ?? qProd, ruta: qProd }
+              ];
+            }
+            this.selectedProductKey = qProd;
+            this.productService.selectProduct(qProd);
+            await this.loadProduct(qProd);
+          }
+        }
+      })
+    );
 
-    if (hasFiles) {
-      this.productService.updateProductWithFiles(
-        this.product,
-        this.downloadsFiles,
-        this.mainImageFile,
-        this.thumbnailFiles
-      );
-    } else {
-      this.productService.updateProduct(this.product);
+    // Sin query params → restaurar selección previa
+    if (!qCat) {
+      const catKey = this.productService.getSelectedCategoryKey();
+      const prodKey = this.productService.getSelectedKey();
+      if (catKey) {
+        this.selectedCategoryKey = catKey;
+        this.loadProductsForCategory(catKey).then(async () => {
+          if (prodKey) {
+            this.selectedProductKey = prodKey;
+            this.productService.selectProduct(prodKey);
+            await this.loadProduct(prodKey);
+          }
+        });
+      }
     }
-
-    this.showSuccessMessage = true;
-    setTimeout(() => (this.showSuccessMessage = false), 3000);
-    this.originalProduct = JSON.parse(JSON.stringify(this.product));
   }
 
-  // ================= RESET =================
-  resetForm(): void {
-    this.product = JSON.parse(JSON.stringify(this.originalProduct));
-    this.downloadsFiles = Array(this.product.downloads?.length ?? 0).fill(null);
-    this.thumbnailFiles = Array(this.product.thumbnails?.length ?? 0).fill(null);
-    this.mainImageFile = null;
+  ngOnDestroy() { this.subs.unsubscribe(); }
+
+  async onCategoryChange(ruta: string) {
+    this.selectedCategoryKey = ruta;
+    this.selectedProductKey = null;
+    this.productsInCategory = [];
+    this.productService.selectCategory(ruta);
+    await this.loadProductsForCategory(ruta);
   }
 
-  // ================= IMAGEN PRINCIPAL =================
-  onMainImageSelected(event: Event): void {
+  private async loadProductsForCategory(categoryRuta: string) {
+    if (!categoryRuta || categoryRuta === '/productos/' || categoryRuta === '/productos') {
+      this.productsInCategory = [];
+      return;
+    }
+    this.isLoadingProducts = true;
+    try {
+      const data = await this.generalProductService.fetchDataForKey(categoryRuta);
+      const gridProducts: { nombre: string; ruta: string }[] = (data.products ?? [])
+        .filter((p: any) => !!p.title && !!p.link)
+        .map((p: any) => ({ nombre: p.title, ruta: p.link }));
+
+      const navbar = this.navbarService.getNavbar();
+      const navbarCat = (navbar.productosMenu ?? []).find(c => c.ruta === categoryRuta);
+      const navbarItems: { nombre: string; ruta: string }[] = (navbarCat?.items ?? [])
+        .filter((i: any) => !!i.nombre && !!i.ruta)
+        .map((i: any) => ({ nombre: i.nombre, ruta: i.ruta as string }));
+
+      const rutasGrid = new Set(gridProducts.map(p => p.ruta));
+      const extraFromNavbar = navbarItems.filter(i => !rutasGrid.has(i.ruta));
+      this.productsInCategory = [...gridProducts, ...extraFromNavbar];
+
+      const map: Record<string, { nombre: string; ruta: string }[]> = {};
+      map[categoryRuta] = this.productsInCategory;
+      this.productService.setCategoryProductsMap(map);
+    } catch (err) {
+      console.error('Error cargando productos de la categoría:', err);
+      this.productsInCategory = [];
+    } finally {
+      this.isLoadingProducts = false;
+    }
+  }
+
+  async onProductChange(ruta: string) {
+    this.selectedProductKey = ruta;
+    this.productService.selectProduct(ruta);
+    await this.loadProduct(ruta);
+  }
+
+  private async loadProduct(ruta: string) {
+    this.isLoading = true;
+    this.errorMessage = null;
+    try {
+      const product = await this.productService.fetchProductForKey(ruta);
+      this.product = product;
+      this._mainImageFile = null;
+      this._mainImageFileName = '';
+      this._thumbnailFiles = (product.thumbnails ?? []).map(() => null);
+      this._thumbnailFileNames = (product.thumbnails ?? []).map(() => '');
+      this._downloadFiles = (product.downloads ?? []).map(() => null);
+      this._downloadFileNames = (product.downloads ?? []).map(() => '');
+    } catch (err) {
+      // Si no existe en BD, inicializar vacío para poder editarlo
+      this.product = {
+        ruta:         ruta,
+        breadcrumbs:  [],
+        title:        '',
+        subtitle:     '',
+        descriptions: [],
+        mainImage:    '',
+        thumbnails:   [],
+        contactLink:  '',
+        features:     [],
+        downloads:    []
+      };
+      this.errorMessage = null;
+      console.warn('Producto no encontrado, iniciando vacío:', ruta);
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  async save() {
+    if (!this.selectedProductKey) return;
+    this.isLoading = true;
+    this.errorMessage = null;
+    try {
+      await this.productService.updateProductForKey(
+        this.selectedProductKey,
+        this.product,
+        this._downloadFiles,
+        this._mainImageFile,
+        this._thumbnailFiles
+      );
+      this.showSuccessMessage = true;
+      setTimeout(() => this.showSuccessMessage = false, 3000);
+    } catch (err) {
+      this.errorMessage = 'Error al guardar el producto. Intenta de nuevo.';
+      console.error(err);
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  async resetForm() {
+    if (this.selectedProductKey) await this.loadProduct(this.selectedProductKey);
+  }
+
+  onMainImageSelected(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    this.mainImageFile = file;
+    this._mainImageFile = file;
+    this._mainImageFileName = file.name;
     const reader = new FileReader();
-    reader.onload = (e) => {
-      this.product.mainImage = e.target?.result as string;
-    };
+    reader.onload = e => this.product.mainImage = e.target?.result as string;
     reader.readAsDataURL(file);
   }
 
-  onDropMainImage(event: DragEvent): void {
+  onDropMainImage(event: DragEvent) {
     event.preventDefault();
     const file = event.dataTransfer?.files[0];
     if (!file) return;
-    this.mainImageFile = file;
+    this._mainImageFile = file;
+    this._mainImageFileName = file.name;
     const reader = new FileReader();
-    reader.onload = (e) => {
-      this.product.mainImage = e.target?.result as string;
-    };
+    reader.onload = e => this.product.mainImage = e.target?.result as string;
     reader.readAsDataURL(file);
   }
 
-  mainImageFileName(): string {
-    return this.mainImageFile?.name ?? '';
-  }
+  mainImageFileName(): string { return this._mainImageFileName; }
 
-  // ================= THUMBNAILS =================
-  addThumbnail(): void {
+  addThumbnail() {
     this.product.thumbnails.push('');
-    this.thumbnailFiles.push(null);
+    this._thumbnailFiles.push(null);
+    this._thumbnailFileNames.push('');
   }
 
-  removeThumbnail(index: number): void {
-    this.product.thumbnails.splice(index, 1);
-    this.thumbnailFiles.splice(index, 1);
+  removeThumbnail(i: number) {
+    this.product.thumbnails.splice(i, 1);
+    this._thumbnailFiles.splice(i, 1);
+    this._thumbnailFileNames.splice(i, 1);
   }
 
-  onThumbnailSelected(index: number, event: Event): void {
+  onThumbnailSelected(i: number, event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    this.thumbnailFiles[index] = file;
+    this._thumbnailFiles[i] = file;
+    this._thumbnailFileNames[i] = file.name;
     const reader = new FileReader();
-    reader.onload = (e) => {
-      this.product.thumbnails[index] = e.target?.result as string;
-    };
+    reader.onload = e => this.product.thumbnails[i] = e.target?.result as string;
     reader.readAsDataURL(file);
   }
 
-  onDropThumbnail(index: number, event: DragEvent): void {
+  onDropThumbnail(i: number, event: DragEvent) {
     event.preventDefault();
     const file = event.dataTransfer?.files[0];
     if (!file) return;
-    this.thumbnailFiles[index] = file;
+    this._thumbnailFiles[i] = file;
+    this._thumbnailFileNames[i] = file.name;
     const reader = new FileReader();
-    reader.onload = (e) => {
-      this.product.thumbnails[index] = e.target?.result as string;
-    };
+    reader.onload = e => this.product.thumbnails[i] = e.target?.result as string;
     reader.readAsDataURL(file);
   }
 
-  thumbnailFileName(index: number): string {
-    return this.thumbnailFiles[index]?.name ?? '';
-  }
+  thumbnailFileName(i: number): string { return this._thumbnailFileNames[i] ?? ''; }
 
-  // ================= DESCRIPCIONES =================
-  addDescription(): void { this.product.descriptions.push(''); }
-  removeDescription(index: number): void { this.product.descriptions.splice(index, 1); }
+  addDescription() { this.product.descriptions.push(''); }
+  removeDescription(i: number) { this.product.descriptions.splice(i, 1); }
 
-  // ================= FEATURES =================
-  addFeature(): void {
-    this.product.features = this.product.features || [];
+  addFeature() {
+    if (!this.product.features) this.product.features = [];
     this.product.features.push({ title: '', description: '' });
   }
-  removeFeature(index: number): void { this.product.features?.splice(index, 1); }
 
-  // ================= DOWNLOADS =================
-  addDownload(): void {
-    this.product.downloads = this.product.downloads || [];
+  removeFeature(i: number) { this.product.features?.splice(i, 1); }
+
+  addDownload() {
+    if (!this.product.downloads) this.product.downloads = [];
     this.product.downloads.push({ title: '', description: '', link: '' });
-    this.downloadsFiles.push(null);
+    this._downloadFiles.push(null);
+    this._downloadFileNames.push('');
   }
 
-  removeDownload(index: number): void {
-    this.product.downloads?.splice(index, 1);
-    this.downloadsFiles.splice(index, 1);
+  removeDownload(i: number) {
+    this.product.downloads?.splice(i, 1);
+    this._downloadFiles.splice(i, 1);
+    this._downloadFileNames.splice(i, 1);
   }
 
-  onFileSelected(index: number, event: Event): void {
-    const input = event.target as HTMLInputElement;
-    this.downloadsFiles[index] = input.files?.[0] ?? null;
+  onFileSelected(i: number, event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    this._downloadFiles[i] = file;
+    this._downloadFileNames[i] = file.name;
   }
 
-  onDropFile(index: number, event: DragEvent): void {
+  onDropFile(i: number, event: DragEvent) {
     event.preventDefault();
-    this.downloadsFiles[index] = event.dataTransfer?.files[0] ?? null;
+    const file = event.dataTransfer?.files[0];
+    if (!file) return;
+    this._downloadFiles[i] = file;
+    this._downloadFileNames[i] = file.name;
   }
 
-  onDragOver(event: DragEvent): void { event.preventDefault(); }
+  fileName(i: number): string { return this._downloadFileNames[i] ?? ''; }
 
-  fileName(index: number): string {
-    return this.downloadsFiles[index]?.name ?? '';
-  }
+  onDragOver(event: DragEvent) { event.preventDefault(); }
+  trackByIndex(i: number) { return i; }
 }
