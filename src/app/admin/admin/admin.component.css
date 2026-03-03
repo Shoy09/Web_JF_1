@@ -247,10 +247,14 @@
     border-radius: 8px;
     padding: 0.5rem;
     cursor: pointer;
+    
+    
   }
 
   .menu-overlay {
-    display: block;
+    display: block;  
+    pointer-events: none; /* ← no captura clicks cuando está oculto */
+
   }
 
   .menu-overlay.visible {
