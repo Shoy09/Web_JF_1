@@ -1,27 +1,35 @@
 <div class="admin-container">
+
+  <!-- BOTÓN HAMBURGUESA (solo móvil) -->
+  <button class="hamburger-btn" (click)="toggleMenu()" [class.active]="menuOpen" aria-label="Menu">
+    <svg width="28" height="18" viewBox="0 0 28 18">
+      <rect x="6" y="0" width="16" height="2" fill="white" />
+      <rect x="6" y="8" width="24" height="2" fill="white" />
+      <rect x="6" y="16" width="16" height="2" fill="white" />
+    </svg>
+  </button>
+
+  <!-- OVERLAY -->
+  <div class="menu-overlay" [class.visible]="menuOpen" (click)="toggleMenu()"></div>
   
-  <nav class="admin-menu">
-    <h1>ADMINISTRADOR</h1>
+  <nav class="admin-menu" [class.open]="menuOpen">
+    <h1>JRC</h1>
 
     <h2>
-      <a routerLink="profile" routerLinkActive="active">Mi Perfil</a>
+      <a routerLink="profile" routerLinkActive="active" (click)="closeMenu()">Mi Perfil</a>
     </h2>
 
-    <a routerLink="home" routerLinkActive="active">Home</a>
-    <a routerLink="footer" routerLinkActive="active">Footer</a>
-    <a routerLink="navbar" routerLinkActive="active">Nav-bar</a>
-    <a routerLink="about" routerLinkActive="active">Acerca de</a>
-    <a routerLink="general-product" routerLinkActive="active">Categoria de Productos</a>
-    <!-- <a routerLink="products" routerLinkActive="active">Productos</a> -->
-    <a routerLink="contact" routerLinkActive="active">Contacto</a>
-    <a routerLink="mas-info" routerLinkActive="active">Más Información</a>
-    <a routerLink="history" routerLinkActive="active">Nuestra Historia</a>
-    <a routerLink="noticias" routerLinkActive="active">Noticias</a>
-    <a routerLink="smtp-config" routerLinkActive="active">Configuración de Correo</a>
-    
+    <a routerLink="home" routerLinkActive="active" (click)="closeMenu()">Home</a>
+    <a routerLink="footer" routerLinkActive="active" (click)="closeMenu()">Footer</a>
+    <a routerLink="navbar" routerLinkActive="active" (click)="closeMenu()">Nav-bar</a>
+    <a routerLink="about" routerLinkActive="active" (click)="closeMenu()">Acerca de</a>
+    <a routerLink="general-product" routerLinkActive="active" (click)="closeMenu()">Categoria de Productos</a>
+    <a routerLink="contact" routerLinkActive="active" (click)="closeMenu()">Contacto</a>
+    <a routerLink="mas-info" routerLinkActive="active" (click)="closeMenu()">Más Información</a>
+    <a routerLink="history" routerLinkActive="active" (click)="closeMenu()">Nuestra Historia</a>
+    <a routerLink="noticias" routerLinkActive="active" (click)="closeMenu()">Noticias</a>
+    <a routerLink="contact-messages" routerLinkActive="active" (click)="closeMenu()">Mensajes de Contacto</a>
 
-
-    <!-- Cerrar sesión -->
     <button class="logout-btn" (click)="cerrarSesion()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
@@ -30,7 +38,6 @@
       </svg>
       Cerrar sesión
     </button>
-
   </nav>
 
   <main class="admin-content">

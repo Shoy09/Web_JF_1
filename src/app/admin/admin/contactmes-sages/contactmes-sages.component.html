@@ -1,0 +1,98 @@
+<!-- contact-messages-admin.component.html -->
+<div class="messages-container">
+
+  <!-- HEADER -->
+  <h1>
+    <span></span>
+    Mensajes de Contacto
+    <span class="header-badge">{{ stats?.unread || 0 }} Sin leer</span>
+  </h1>
+
+  <!-- FILTROS (CLICKEABLES) -->
+  <div class="filters-bar" *ngIf="stats">
+    <button class="filter-btn" 
+            [class.active]="selectedFilter === 'all'"
+            (click)="filterMessages('all')">
+      <span class="filter-icon">📧</span>
+      <span class="filter-label">Todos</span>
+      <span class="filter-count">{{ stats.total }}</span>
+    </button>
+
+    <button class="filter-btn" 
+            [class.active]="selectedFilter === 'unread'"
+            (click)="filterMessages('unread')">
+      <span class="filter-icon">📬</span>
+      <span class="filter-label">Sin leer</span>
+      <span class="filter-count">{{ stats.unread }}</span>
+    </button>
+
+    <button class="filter-btn" 
+            [class.active]="selectedFilter === 'read'"
+            (click)="filterMessages('read')">
+      <span class="filter-icon">✅</span>
+      <span class="filter-label">Leídos</span>
+      <span class="filter-count">{{ stats.read }}</span>
+    </button>
+  </div>
+
+  <!-- TABLA DE MENSAJES -->
+  <div class="messages-list">
+    <!-- ESTADO VACÍO -->
+    <div *ngIf="filteredMessages.length === 0" class="empty-state">
+      <mat-icon>mail_outline</mat-icon>
+      <p>
+        <span *ngIf="selectedFilter === 'all'">No hay mensajes</span>
+        <span *ngIf="selectedFilter === 'unread'">No hay mensajes sin leer</span>
+        <span *ngIf="selectedFilter === 'read'">No hay mensajes leídos</span>
+      </p>
+    </div>
+
+    <!-- LISTA DE MENSAJES -->
+    <div *ngFor="let msg of filteredMessages; let i = index" 
+         class="message-item" 
+         [class.unread]="!msg.read">
+      
+      <!-- Indicador de leído -->
+      <div class="read-indicator" 
+           (click)="toggleRead(msg.id, msg.read)" 
+           [title]="msg.read ? 'Marcar como sin leer' : 'Marcar como leído'">
+        <mat-icon>{{ msg.read ? 'mail_outline' : 'mail' }}</mat-icon>
+      </div>
+
+      <!-- Contenido -->
+      <div class="message-content">
+        <div class="message-header">
+          <div class="sender-info">
+            <span class="name">{{ msg.firstName }} {{ msg.lastName }}</span>
+            <span class="email">{{ msg.email }}</span>
+          </div>
+          <div class="meta">
+            <span class="region">{{ msg.region }}</span>
+            <span class="date">{{ msg.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+        </div>
+
+        <div class="message-details">
+          <p><strong>Empresa:</strong> {{ msg.company || '—' }}</p>
+          <p><strong>Teléfono:</strong> {{ msg.phone || '—' }}</p>
+          <p><strong>Contacto regional:</strong> {{ msg.contactName }}</p>
+        </div>
+
+        <div class="message-text">
+          <p>{{ msg.message }}</p>
+        </div>
+      </div>
+
+      <!-- Acciones -->
+      <div class="message-actions">
+        <button mat-icon-button 
+                (click)="deleteMessage(msg.id)" 
+                matTooltip="Eliminar"
+                class="delete-btn">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

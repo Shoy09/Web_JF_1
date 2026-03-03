@@ -1,0 +1,432 @@
+/* contact-messages-admin.component.scss */
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:host {
+  --bg: #ffffff;
+  --bg-card: #ffffff;
+  --bg-elevated: #f7f9f7;
+  --bg-hover: #eef4ee;
+  --border: #d6e4d6;
+  --border-light: #c2d9c2;
+  --accent: #f5e1bf91;
+  --accent-solid: #d97706;
+  --accent-dim: rgba(245,158,11,.12);
+  --accent-glow: rgba(245,158,11,.25);
+  --blue: #3b82f6;
+  --blue-dim: rgba(59,130,246,.12);
+  --red: #ef4444;
+  --red-dim: rgba(239,68,68,.1);
+  --green: #22c55e;
+  --green-dim: rgba(34,197,94,.1);
+  --text-1: #113a0e;
+  --text-2: #000000;
+  --text-3: #4f607a;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 4px 15px rgba(0,0,0,.08);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,.12);
+  
+  display: block;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* ── Contenedor principal ── */
+.messages-container {
+  background: #f0f5f0;
+  min-height: 100vh;
+  padding: 2rem 2.5rem 4rem;
+  color: var(--text-1);
+  font-family: 'DM Sans', sans-serif;
+}
+
+@media (max-width: 900px) {
+  .messages-container { padding: 1.25rem 1rem 3rem; }
+}
+
+/* ── Header ── */
+.messages-container > h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: var(--text-1);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 2rem;
+  letter-spacing: -0.02em;
+}
+
+.header-badge {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--accent-dim);
+  color: var(--accent-solid);
+  border: 1px solid var(--accent-glow);
+  padding: 3px 10px;
+  border-radius: 99px;
+}
+
+/* ── Filtros bar ── */
+.filters-bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.5rem;
+  box-shadow: var(--shadow);
+}
+
+.filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-3);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex: 1;
+}
+
+.filter-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-1);
+}
+
+.filter-btn.active {
+  background: var(--accent-dim);
+  color: var(--accent-solid);
+  border: 1px solid var(--accent-glow);
+}
+
+.filter-icon {
+  font-size: 1.1rem;
+}
+
+.filter-label {
+  flex: 1;
+  text-align: left;
+}
+
+.filter-count {
+  background: var(--bg-card);
+  padding: 0.2rem 0.6rem;
+  border-radius: 99px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-2);
+  border: 1px solid var(--border-light);
+}
+
+.filter-btn.active .filter-count {
+  background: var(--accent-solid);
+  color: white;
+  border-color: var(--accent-solid);
+}
+
+@media (max-width: 640px) {
+  .filters-bar {
+    flex-direction: column;
+  }
+  
+  .filter-btn {
+    width: 100%;
+  }
+}
+
+/* ── Messages list ── */
+.messages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* ── Message item ── */
+.message-item {
+  display: flex;
+  gap: 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  box-shadow: var(--shadow);
+  transition: all 0.15s ease;
+  position: relative;
+}
+
+.message-item:hover {
+  border-color: var(--border-light);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.message-item.unread {
+  background: var(--green-dim);
+  border-left: 4px solid var(--green);
+}
+
+/* ── Read indicator ── */
+.read-indicator {
+  display: flex;
+  align-items: flex-start;
+  padding-top: 0.25rem;
+  cursor: pointer;
+  color: var(--text-3);
+  transition: color 0.15s ease;
+}
+
+.read-indicator:hover {
+  color: var(--accent-solid);
+}
+
+.read-indicator mat-icon {
+  font-size: 1.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.message-item.unread .read-indicator {
+  color: var(--green);
+}
+
+/* ── Message content ── */
+.message-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.message-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.sender-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.name {
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-1);
+}
+
+.email {
+  font-size: 0.85rem;
+  color: var(--text-3);
+  background: var(--bg-elevated);
+  padding: 0.2rem 0.5rem;
+  border-radius: 99px;
+  border: 1px solid var(--border-light);
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.region {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent-solid);
+  background: var(--accent-dim);
+  padding: 0.2rem 0.6rem;
+  border-radius: 99px;
+  border: 1px solid var(--accent-glow);
+}
+
+.date {
+  font-size: 0.8rem;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+
+/* ── Message details ── */
+.message-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.message-details p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-2);
+}
+
+.message-details strong {
+  color: var(--text-1);
+  font-weight: 600;
+}
+
+/* ── Message text ── */
+.message-text {
+  padding: 0.75rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-2);
+  max-height: 150px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-light) transparent;
+}
+
+.message-text::-webkit-scrollbar {
+  width: 4px;
+}
+
+.message-text::-webkit-scrollbar-thumb {
+  background: var(--border-light);
+  border-radius: 2px;
+}
+
+.message-text p {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ── Message actions ── */
+.message-actions {
+  display: flex;
+  align-items: flex-start;
+}
+
+.delete-btn {
+  color: var(--text-3) !important;
+}
+
+.delete-btn:hover {
+  color: var(--red) !important;
+  background: var(--red-dim) !important;
+}
+
+::ng-deep .mat-mdc-icon-button.delete-btn .mat-icon {
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+}
+
+/* ── Empty state ── */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  background: var(--bg-elevated);
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  color: var(--text-3);
+}
+
+.empty-state mat-icon {
+  font-size: 3rem;
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 1rem;
+  color: var(--text-3);
+}
+
+.empty-state p {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* ── Botones de Angular Material customizados ── */
+::ng-deep .mat-mdc-icon-button {
+  color: var(--text-3) !important;
+  transition: all 0.15s ease !important;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+::ng-deep .mat-mdc-icon-button:hover {
+  color: var(--text-1) !important;
+  background: var(--bg-hover) !important;
+}
+
+::ng-deep .mat-mdc-icon-button .mat-icon {
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+  line-height: 20px;
+}
+
+/* ── Tooltips ── */
+::ng-deep .mat-mdc-tooltip {
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 0.75rem !important;
+  background: var(--text-1) !important;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .message-item {
+    flex-direction: column;
+  }
+  
+  .message-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .meta {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .message-actions {
+    align-self: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .sender-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  
+  .meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  
+  .date {
+    white-space: normal;
+  }
+}

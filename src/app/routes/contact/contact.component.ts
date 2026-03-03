@@ -1,3 +1,4 @@
+// contact.component.ts
 import { Component, OnInit } from '@angular/core';
 import { Observable, map, startWith, debounceTime, distinctUntilChanged } from 'rxjs';
 import { ContactService } from '../../services/contact.service';
@@ -5,6 +6,7 @@ import { Region, ContactPageContent } from '../../models/contact.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { API_BASE_URL } from '../../api.config';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -160,12 +162,15 @@ export class ContactComponent implements OnInit {
 
     const payload = {
       ...this.contactForm.value,
-      toEmail:     this.selectedRegion!.contact.email,  // correo según región
+      toEmail:     this.selectedRegion!.contact.email,
       region:      this.selectedRegion!.label,
       contactName: this.selectedRegion!.contact.name
     };
 
-    this.http.post('/api/contact-mail/send', payload).subscribe({
+    // ═══════════════════════════════════════════════════════════════════════
+    // CAMBIO: Enviar a BD en lugar de correo
+    // ═══════════════════════════════════════════════════════════════════════
+    this.http.post(`${API_BASE_URL}/contact-messages`, payload).subscribe({
       next: () => {
         this.snackBar.open('✅ Mensaje enviado correctamente!', 'Cerrar', {
           duration: 4000,

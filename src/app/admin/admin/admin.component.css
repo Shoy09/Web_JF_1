@@ -217,3 +217,44 @@
     margin-left: 0;
   }
 }
+/* ── Hamburguesa ──────────────────────────────────────────────── */
+.hamburger-btn {
+  display: none;
+}
+
+/* ── Overlay ──────────────────────────────────────────────────── */
+.menu-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 99;
+  opacity: 0;
+  transition: opacity .25s ease;
+}
+
+@media (max-width: 768px) {
+  .hamburger-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 101;
+    background: #1e293b;
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem;
+    cursor: pointer;
+  }
+
+  .menu-overlay {
+    display: block;
+  }
+
+  .menu-overlay.visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+}

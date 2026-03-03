@@ -423,3 +423,25 @@
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+/* Hamburguesa SIEMPRE oculta en desktop */
+.navegacion {
+  display: none;
+}
+
+/* Solo visible en móvil */
+@media (max-width: 768px) {
+  .hamburger-btn {
+    display: flex;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1001;
+    background: #1e293b;
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem;
+    cursor: pointer;
+  }
+}
+

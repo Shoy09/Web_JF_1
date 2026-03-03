@@ -1,3 +1,5 @@
+// models/contact.model.ts
+
 export interface Office {
   country: string;
   address: string;
@@ -38,4 +40,23 @@ export interface ContactPageContent {
     legalText: string;
     sendButtonLabel: string;
   };
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// NUEVO: Mensaje de contacto
+// ═══════════════════════════════════════════════════════════════════════════
+
+export interface ContactMessage {
+  id?: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  company?: string;
+  message: string;
+  region: string;
+  contactName: string;
+  toEmail: string;
+  createdAt?: Date;
+  read?: boolean;
 }

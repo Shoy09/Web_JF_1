@@ -11,12 +11,20 @@ import { Router, RouterModule, RouterOutlet } from '@angular/router';
 })
 export class AdminComponent {
 
+  menuOpen = false;
+
   constructor(private readonly router: Router) {}
 
+  toggleMenu(): void {
+    this.menuOpen = !this.menuOpen;
+  }
+
+  closeMenu(): void {
+    this.menuOpen = false;
+  }
+
   cerrarSesion(): void {
-    // Borra el token del sessionStorage
-  sessionStorage.removeItem('authToken'); // ← también sessionStorage
-    // Redirige al login
+    sessionStorage.removeItem('authToken');
     this.router.navigate(['/login']);
   }
 }
