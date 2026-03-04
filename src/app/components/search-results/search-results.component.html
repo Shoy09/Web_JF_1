@@ -1,39 +1,61 @@
 <div class="search-page">
+
+  <!-- HEADER -->
   <div class="search-page__header">
-    <h1>Resultados de búsqueda</h1>
-    <p class="search-query">
-      <span *ngIf="query">Mostrando resultados para: <strong>"{{ query }}"</strong></span>
+    <p class="search-page__label">USTED HA BUSCADO</p>
+<div class="search-page__query-row">
+  <input
+    class="search-page__title"
+    [(ngModel)]="query"
+    (keydown.enter)="buscarDesdeHeader()"
+    [placeholder]="'...'"
+  />
+  <svg class="search-page__icon" (click)="buscarDesdeHeader()"
+       width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+       style="cursor: pointer;">
+    <circle cx="11" cy="11" r="8"></circle>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+  </svg>
+</div>
+    <div class="search-page__underline"></div>
+    <p class="search-page__meta" *ngIf="!buscando && resultados.length > 0">
+      Econtramos {{ resultados.length }} resultado{{ resultados.length !== 1 ? 's' : '' }}. Se mostrarán a continuación
     </p>
   </div>
 
+  <!-- CONTENIDO -->
   <div class="search-page__content">
 
     <!-- Cargando -->
     <div *ngIf="buscando" class="search-loading">
-      Buscando...
+      <div class="search-loading__spinner"></div>
+      <span>Buscando...</span>
     </div>
 
     <!-- Sin resultados -->
     <div *ngIf="!buscando && resultados.length === 0 && query" class="search-empty">
       <p>No se encontraron resultados para <strong>"{{ query }}"</strong>.</p>
-      <p class="search-empty__hint">Intenta con otras palabras clave.</p>
+      <p class="search-empty__hint">Pruebe diferentes palabras clave.</p>
     </div>
 
     <!-- Resultados -->
     <div *ngIf="!buscando && resultados.length > 0" class="search-results">
-      <p class="search-count">{{ resultados.length }} resultado{{ resultados.length !== 1 ? 's' : '' }} encontrado{{ resultados.length !== 1 ? 's' : '' }}</p>
-
       <div class="search-result-item"
            *ngFor="let r of resultados"
            (click)="irA(r.url)">
-        <div class="result-tipo" [class.tipo-noticia]="r.tipo === 'noticia'" [class.tipo-producto]="r.tipo === 'producto'">
-          {{ r.tipo === 'noticia' ? 'Noticia' : 'Producto' }}
-        </div>
-        <div class="result-info">
+
+        <div class="result-body">
           <h3 class="result-titulo">{{ r.titulo }}</h3>
           <p class="result-descripcion" *ngIf="r.descripcion">{{ r.descripcion }}</p>
         </div>
-        <div class="result-arrow">→</div>
+
+        <div class="result-arrow">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </div>
+
       </div>
     </div>
 

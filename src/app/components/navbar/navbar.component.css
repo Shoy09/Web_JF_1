@@ -534,6 +534,41 @@ a{
   color: rgba(0, 0, 0, 0.6);
 }
 
+/* Página buscar - texto negro */
+.navbar.nav-buscar-page .nav-links a {
+  color: var(--text-black);
+}
+
+@media (max-width: 700px) {
+  .navbar.nav-buscar-page .nav-links a {
+    color: var(--text-white);
+  }
+}
+
+.navbar.nav-buscar-page .hamburger-btn svg rect {
+  fill: rgb(0, 0, 0);
+}
+
+.navbar.nav-buscar-page .search-trigger svg {
+  stroke: rgb(0, 0, 0);
+}
+
+.navbar.nav-buscar-page .language-btn {
+  color: rgb(0, 0, 0);
+}
+
+.navbar.nav-buscar-page .language-btn svg {
+  stroke: rgb(0, 0, 0);
+}
+
+.navbar.nav-buscar-page .search-input {
+  color: rgb(0, 0, 0);
+}
+
+.navbar.nav-buscar-page .search-input::placeholder {
+  color: rgba(0, 0, 0, 0.6);
+}
+
 
 
 /* Mega menú activo - todo blanco */

@@ -35,6 +35,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   isContactPage = false;
   isNoticiasPage = false;
   isAboutPage = false;
+  isBuscarPage = false;
 
   isMobileView = false;
   private readonly MOBILE_WIDTH = 768;
@@ -134,6 +135,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.isContactPage  = url.includes('/contactos');
     this.isNoticiasPage = url.toLowerCase().includes('/noticias');
     this.isAboutPage    = url.includes('/acerca-de');
+    this.isBuscarPage   = url.includes('/buscar'); 
   }
 
   private updateViewMode() {
@@ -194,14 +196,17 @@ export class NavbarComponent implements OnInit, OnDestroy {
     if (!this.searchOpen) this.searchQuery = '';
   }
 
-  ejecutarBusqueda(event?: KeyboardEvent) {
-    if (event && event.key !== 'Enter') return;
-    if (!this.searchQuery.trim()) return;
-    cerrarMenusAlNavegar: this.cerrarMenusAlNavegar();
-    this.router.navigate(['/buscar'], { queryParams: { q: this.searchQuery.trim() } });
-    this.searchQuery = '';
-    this.searchOpen = false;
-  }
+ejecutarBusqueda(event?: KeyboardEvent) {
+  if (event && event.key !== 'Enter') return;
+  const q = this.searchQuery.trim();
+  if (!q) return;
+
+  // ✅ Guardar query ANTES de limpiar
+  this.cerrarMenusAlNavegar(); // ← correcto, sin el label
+  this.router.navigate(['/buscar'], { queryParams: { q } });
+  this.searchQuery = '';
+  this.searchOpen = false;
+}
 
   // ===============================
   // IDIOMAS

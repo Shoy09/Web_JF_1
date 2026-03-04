@@ -154,4 +154,7 @@ export class NoticiasService {
       }
     } catch {}
   }
+  getNoticias(): Noticia[] {
+  return this.todasSubject.getValue();
+}
 }

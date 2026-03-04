@@ -22,12 +22,14 @@ export class SearchService {
     const q = query.toLowerCase().trim();
     const resultados: SearchResult[] = [];
 
-    // ─── Buscar en noticias ───────────────────────────────────────────────
-    const noticias = this.noticiasService['todasSubject'].getValue();
+    // ─── Noticias ─────────────────────────────────────────────────────────
+    const noticias = this.noticiasService.getNoticias();
     noticias
       .filter(n => n.visible !== false)
       .forEach(n => {
-        if (n.titulo.toLowerCase().includes(q)) {
+        const enTitulo    = n.titulo?.toLowerCase().includes(q);
+        const enCategoria = n.categoria?.toLowerCase().includes(q);
+        if (enTitulo || enCategoria) {
           resultados.push({
             tipo: 'noticia',
             titulo: n.titulo,
@@ -37,20 +39,11 @@ export class SearchService {
         }
       });
 
-    // ─── Buscar en productos ──────────────────────────────────────────────
+    // ─── Productos ────────────────────────────────────────────────────────
     const navbar = this.navbarService.getNavbar();
-    navbar.productosMenu?.forEach((categoria: any) => {
-      categoria.items?.forEach((item: any) => {
-        if (item.nombre.toLowerCase().includes(q)) {
-          resultados.push({
-            tipo: 'producto',
-            titulo: item.nombre,
-            descripcion: categoria.titulo,
-            url: item.ruta
-          });
-        }
-      });
-      // También buscar en el título de la categoría
+    const productosMenu = navbar?.productosMenu ?? [];
+
+    productosMenu.forEach((categoria: any) => {
       if (categoria.titulo?.toLowerCase().includes(q)) {
         resultados.push({
           tipo: 'producto',
@@ -59,6 +52,17 @@ export class SearchService {
           url: categoria.ruta
         });
       }
+
+      (categoria.items ?? []).forEach((item: any) => {
+        if (item.nombre?.toLowerCase().includes(q)) {
+          resultados.push({
+            tipo: 'producto',
+            titulo: item.nombre,
+            descripcion: categoria.titulo,
+            url: item.ruta
+          });
+        }
+      });
     });
 
     return resultados;
