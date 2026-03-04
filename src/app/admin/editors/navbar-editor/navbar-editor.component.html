@@ -2,8 +2,8 @@
 <div class="editor-container" *ngIf="form">
   <h1>
     <span></span>
-    Editor de Navbar
-    <span class="header-badge">Navegación</span>
+Editar barra de navegación
+    <span class="header-badge">Secciones del sitio</span>
   </h1>
 
   <form [formGroup]="form">
@@ -16,33 +16,33 @@
             <div class="full-width section-group">
               <h3>
                 <mat-icon style="margin-right: 0.5rem; color: #3b82f6;">settings</mat-icon>
-                Configuración General
+                Configuración de textos
               </h3>
 
               <div class="form-grid" style="grid-template-columns: repeat(2, 1fr); margin-top: 1rem;">
                 <mat-form-field appearance="outline">
-                  <mat-label>Productos Label</mat-label>
+                  <mat-label>Productos</mat-label>
                   <input matInput formControlName="productosLabel" placeholder="Productos">
                   <mat-hint>Texto del menú principal</mat-hint>
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
-                  <mat-label>Acerca de Label</mat-label>
+                  <mat-label>Acerca de</mat-label>
                   <input matInput formControlName="aboutLabel" placeholder="Acerca de">
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
-                  <mat-label>Contacto Label</mat-label>
+                  <mat-label>Contacto</mat-label>
                   <input matInput formControlName="contactoLabel" placeholder="Contacto">
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
-                  <mat-label>Texto "Síguenos"</mat-label>
+                  <mat-label>Texto para movil "Síguenos"</mat-label>
                   <input matInput formControlName="siguenos" placeholder="Síguenos en">
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
-                  <mat-label>Buscar Placeholder</mat-label>
+                  <mat-label>Texto guía de buscar</mat-label>
                   <input matInput formControlName="buscarPlaceholder" placeholder="Buscar...">
                 </mat-form-field>
               </div>
@@ -57,7 +57,7 @@
           <div class="full-width section-group">
             <h3>
               <mat-icon style="margin-right: 0.5rem; color: #3b82f6;">image</mat-icon>
-              Logo del Navbar
+              Logo
             </h3>
             <div class="upload-row" style="margin-top: 1rem;">
               <img *ngIf="form.get('logoActual')?.value"
@@ -83,11 +83,8 @@
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                 <h3 style="display: flex; align-items: center; gap: 0.5rem; margin: 0;">
                   <mat-icon style="color: #3b82f6;">info</mat-icon>
-                  Items del Menú Acerca de
-                </h3>
-                <button mat-raised-button type="button" (click)="addAboutItem()">
-                  <mat-icon>add</mat-icon> Agregar item
-                </button>
+Opciones del menú “Sobre nosotros”                </h3>
+
               </div>
 
               <div formArrayName="aboutMenu">
@@ -104,17 +101,10 @@
 
                   <div class="form-grid">
                     <mat-form-field appearance="outline" class="full-width">
-                      <mat-label>Nombre del item</mat-label>
+                      <mat-label>Nombre</mat-label>
                       <input matInput formControlName="nombre" placeholder="Nosotros">
                     </mat-form-field>
 
-
-
-                    <div class="full-width" style="display: flex; justify-content: flex-end; margin-top: 1rem;">
-                      <button mat-raised-button color="warn" type="button" (click)="removeAboutItem(i)">
-                        <mat-icon>delete</mat-icon> Eliminar item
-                      </button>
-                    </div>
                   </div>
                 </mat-expansion-panel>
               </div>
@@ -170,7 +160,7 @@
                     </div>
 
                     <mat-form-field appearance="outline" class="full-width">
-                      <mat-label>URL</mat-label>
+                      <mat-label>URL de la red social</mat-label>
                       <input matInput formControlName="url" placeholder="https://facebook.com/...">
                     </mat-form-field>
 

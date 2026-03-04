@@ -123,7 +123,7 @@
     </mat-tab>
 
     <!-- ═══════════════ CUERPO ═══════════════ -->
-    <mat-tab label="Cuerpo">
+    <mat-tab label="Contenido">
       <mat-card class="tab-card">
         <div class="full-width section-group">
           <h3>
@@ -174,14 +174,7 @@
             </ng-container>
 
             <ng-container *ngIf="item.tipo === 'imagen'">
-              <mat-form-field appearance="outline" style="width: 100%; margin-bottom: 0.5rem;">
-                <mat-label>Texto alternativo (alt)</mat-label>
-                <input matInput
-                  [ngModel]="getImageAlt(item)"
-                  (ngModelChange)="setImageAlt(item, $event)"
-                  [name]="'alt' + i"
-                  placeholder="Descripción de la imagen">
-              </mat-form-field>
+
               <div class="upload-row">
                 <img *ngIf="getImageUrl(item)" [src]="getImageUrl(item)"
                      style="max-height: 160px; border-radius: 6px; margin-bottom: 8px; display: block; max-width: 100%;">

@@ -170,8 +170,8 @@
       </div>
 
       <p style="color: #64748b; font-size: 0.875rem; margin-bottom: 1rem;">
-        Estos son los productos que se muestran en la página de esta categoría (cards con imagen y enlace).
-        Activa <strong>Mostrar en Navbar</strong> para que el producto aparezca también en el menú desplegable.
+        Estos son los productos que se muestran en la página de esta categoría (Tarjetas con imagen y enlace).
+        Activa <strong>Mostrar en la barra de navegación</strong> para que el producto aparezca también en el menú desplegable.
       </p>
 
       <div formArrayName="products" class="products-grid">
@@ -186,7 +186,7 @@
             <mat-panel-description *ngIf="productsArray.at(i).get('showInNavbar')?.value">
               <span class="navbar-badge">
                 <mat-icon style="font-size: 0.85rem; height: 0.85rem; width: 0.85rem;">menu</mat-icon>
-                En Navbar
+                En la barra de navegación
               </span>
             </mat-panel-description>
           </mat-expansion-panel-header>
@@ -205,10 +205,10 @@
             <input type="hidden" formControlName="link">
 
             <!-- Imagen -->
-            <mat-form-field appearance="outline" class="full-width" style="margin-top: 0.75rem;">
+            <!-- <mat-form-field appearance="outline" class="full-width" style="margin-top: 0.75rem;">
               <mat-label>Imagen (URL actual)</mat-label>
               <input matInput formControlName="image" placeholder="assets/products/bit1.png">
-            </mat-form-field>
+            </mat-form-field> -->
 
             <div class="upload-row">
               <img *ngIf="productsArray.at(i).get('image')?.value"
@@ -228,7 +228,7 @@
             <div class="navbar-toggle" style="margin-top: 0.75rem;">
               <mat-icon style="color: #0284c7; flex-shrink: 0;">menu</mat-icon>
               <div class="navbar-toggle-content">
-                <strong>Mostrar en el Navbar</strong>
+                <strong>Mostrar en la barra de navegación</strong>
                 <span>Si está activo, este producto aparecerá en el menú desplegable bajo esta categoría.</span>
               </div>
               <mat-slide-toggle formControlName="showInNavbar" color="primary"></mat-slide-toggle>

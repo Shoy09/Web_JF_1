@@ -9,13 +9,13 @@
   <form [formGroup]="aboutForm">
     <mat-tab-group animationDuration="300ms" [dynamicHeight]="true">
       <!-- ================= HERO SECTION ================= -->
-      <mat-tab label="Hero Section">
+      <mat-tab label="Sección principal">
         <mat-card class="tab-card">
           <div class="form-grid">
             <div class="full-width section-group">
               <h3>
                 <mat-icon style="margin-right: 0.5rem; color: #3b82f6;">slideshow</mat-icon>
-                Sección Hero
+                 Texto
               </h3>
               
               <div class="form-grid" style="margin-top: 1rem;" formGroupName="hero">
@@ -36,30 +36,7 @@
         </mat-card>
       </mat-tab>
 
-      <!-- ================= SUBTÍTULO ================= -->
-      <mat-tab label="Subtítulo">
-        <mat-card class="tab-card">
-          <div class="form-grid">
-            <div class="full-width section-group">
-              <h3>
-                <mat-icon style="margin-right: 0.5rem; color: #3b82f6;">title</mat-icon>
-                Subtítulo Decorativo
-              </h3>
-              
-              <div class="form-grid" style="margin-top: 1rem;" formGroupName="subtitle">
-                <mat-form-field appearance="outline" class="full-width">
-                  <mat-label>Subtítulo</mat-label>
-                  <input matInput formControlName="text" placeholder="Nuestra Misión, Valores, Equipo...">
-                  <mat-hint align="end">{{ getCharacterCount(subtitleTextControl) }}/200</mat-hint>
-                  <mat-error *ngIf="subtitleTextControl?.errors?.['maxlength']">
-                    Máximo 200 caracteres
-                  </mat-error>
-                </mat-form-field>
-              </div>
-            </div>
-          </div>
-        </mat-card>
-      </mat-tab>
+      
 
       <!-- ================= PÁRRAFOS PRINCIPALES ================= -->
       <mat-tab label="Párrafos Principales">
@@ -105,6 +82,31 @@
                     </div>
                   </div>
                 </mat-expansion-panel>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </mat-tab>
+
+      <!-- ================= SUBTÍTULO ================= -->
+      <mat-tab label="Subtítulo">
+        <mat-card class="tab-card">
+          <div class="form-grid">
+            <div class="full-width section-group">
+              <h3>
+                <mat-icon style="margin-right: 0.5rem; color: #3b82f6;">title</mat-icon>
+                Subtítulo Decorativo
+              </h3>
+              
+              <div class="form-grid" style="margin-top: 1rem;" formGroupName="subtitle">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Subtítulo</mat-label>
+                  <input matInput formControlName="text" placeholder="Nuestra Misión, Valores, Equipo...">
+                  <mat-hint align="end">{{ getCharacterCount(subtitleTextControl) }}/200</mat-hint>
+                  <mat-error *ngIf="subtitleTextControl?.errors?.['maxlength']">
+                    Máximo 200 caracteres
+                  </mat-error>
+                </mat-form-field>
               </div>
             </div>
           </div>

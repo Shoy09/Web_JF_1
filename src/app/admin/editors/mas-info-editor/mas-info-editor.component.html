@@ -11,9 +11,9 @@
   <mat-tab-group animationDuration="300ms" [dynamicHeight]="true">
 
     <!-- ================= HERO ================= -->
-    <mat-tab label="Hero">
+    <mat-tab label="Principal">
       <mat-card class="tab-card">
-        <h3>Sección Hero</h3>
+        <h3>Sección Principal</h3>
         <form>
           <div class="form-grid">
             <mat-form-field appearance="outline" class="full-width">
@@ -61,7 +61,7 @@
             </div>
           </div>
 
-          <h3 style="margin-top: 1.5rem;">Botón del Hero <span class="optional-badge">opcional</span></h3>
+          <h3 style="margin-top: 1.5rem;">Enlace <span class="optional-badge">opcional</span></h3>
 
           <div *ngIf="data.hero.boton" class="card-editor">
             <div class="form-grid">
@@ -228,19 +228,19 @@
     </mat-tab>
 
     <!-- ================= BOTTOM BANNER ================= -->
-    <mat-tab label="Banner Inferior">
+    <mat-tab label="Contendio Inferior">
       <mat-card class="tab-card">
-        <h3>Banner Inferior</h3>
+        <h3>Seccción Inferior</h3>
         <form>
           <div *ngIf="data.bottomBanner; else noBanner" class="card-editor">
             <div class="form-grid">
               <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Título del banner</mat-label>
+                <mat-label>Título</mat-label>
                 <input matInput [(ngModel)]="data.bottomBanner.titulo" name="bannerTitulo" placeholder="¿Hablamos?">
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Texto del banner</mat-label>
+                <mat-label>Parrafo</mat-label>
                 <textarea matInput [(ngModel)]="data.bottomBanner.texto" name="bannerTexto" rows="2" placeholder="Contacta con nosotros para más información"></textarea>
               </mat-form-field>
 

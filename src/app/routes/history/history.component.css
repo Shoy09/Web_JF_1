@@ -1,13 +1,13 @@
-/* =========================
-   HERO
-========================= */
+/* ============================================
+   HISTORY TIMELINE — Premium Editorial Style
+   ============================================ */
 
+/* ── Hero (REQUERIDO) ── */
 .history-hero {
   height: 80vh;
   background: url('/header-1.webp') center / cover no-repeat;
   display: flex;
   justify-content: center;
-    /* Asegura que el texto dentro del H1 también esté centrado */
   text-align: center;
   align-items: center;
 }
@@ -16,138 +16,246 @@
   color: #fff;
   font-size: 42px;
   letter-spacing: 2px;
-
-} 
-
-/* =========================
-   TIMELINE
-========================= */
-
-.timeline {
-  padding: 100px 180px;
 }
 
-/* ITEM BASE */
+/* ── Timeline section ── */
+.timeline {
+  background: #fff;
+  padding: 0 0 140px;
+}
+
+.timeline-container {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 100px 60px 0;
+}
+
+/* ── Spine ── */
+.timeline-container::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0px,
+    #ddd 80px,
+    #ddd calc(100% - 100px),
+    transparent 100%
+  );
+  transform: translateX(-50%);
+}
+
+/* ── Item ── */
 .timeline-item {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  gap: 0 100px;
+  margin-bottom: 130px;
+  position: relative;
   align-items: center;
-  gap: 150px;
-  margin-bottom: 100px;
 }
 
-/* TEXTO */
-.timeline h3 {
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 12px;
-  color: #000;
-}
-  
-
-.timeline p {
-  font-size: 15px;
-  line-height: 1.7;
-  color: #444;
-  max-width: 420px;
-}
-
-/* IMÁGENES */
-.timeline .media img {
-  width: 100%;
-  height: auto;
+/* Spine dot — outer ring */
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1.5px solid #bbb;
+  z-index: 2;
 }
 
-
-/* =========================
-   INTERCALADO AUTOMÁTICO
-========================= */
-
-/* ITEMS PARES → imagen a la izquierda */
-.timeline-item:nth-child(even) {
-  direction: rtl;
+/* Spine dot — inner fill */
+.timeline-item::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #1a1a1a;
+  z-index: 3;
 }
 
-/* Corregimos contenido interno */
-.timeline-item:nth-child(even) .content,
+/* ── Odd: texto izq, imagen der ── */
+.timeline-item:nth-child(odd) .content {
+  order: 1;
+  text-align: right;
+  padding-right: 56px;
+}
+.timeline-item:nth-child(odd) .media {
+  order: 2;
+  padding-left: 56px;
+}
+
+/* ── Even: imagen izq, texto der ── */
+.timeline-item:nth-child(even) .content {
+  order: 2;
+  text-align: left;
+  padding-left: 56px;
+}
 .timeline-item:nth-child(even) .media {
-  direction: ltr;
+  order: 1;
+  padding-right: 56px;
 }
 
-/* =========================
-   RESPONSIVE (Móvil)
-========================= */
+/* ── Content ── */
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
 
-@media (max-width: 992px) {
-  /* 1. Ajustamos el contenedor principal para que no esté apretado */
-  .timeline {
-    padding: 40px 20px;
-  }
+/* ── Story ── */
+.story {
+  padding: 28px 0;
+  position: relative;
+}
 
+.story:not(:last-child) {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* Year badge */
+.story h3 {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #fff;
+  background: #1a1a1a;
+  padding: 4px 10px;
+  margin: 0 0 14px;
+  line-height: 1;
+}
+
+.story p {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #555;
+  line-height: 1.85;
+  margin: 0;
+}
+
+/* ── Alineación del badge en items odd ── */
+.timeline-item:nth-child(odd) .content .story {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.timeline-item:nth-child(even) .content .story {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* ── Media ── */
+.media {
+  overflow: hidden;
+  position: relative;
+}
+
+/* Overlay sutil en esquina */
+.media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0,0,0,0.08) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 0.5s ease;
+}
+
+.media:hover::after {
+  opacity: 0;
+}
+
+.media img {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  filter: grayscale(20%) contrast(1.05);
+  transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              filter 0.6s ease;
+}
+
+.media:hover img {
+  transform: scale(1.06);
+  filter: grayscale(0%) contrast(1);
+}
+
+/* ── Número de item grande decorativo ── */
+.timeline-item:nth-child(odd) .content::before,
+.timeline-item:nth-child(even) .content::before {
+  font-size: 7rem;
+  font-weight: 800;
+  line-height: 1;
+  color: #f4f4f4;
+  display: block;
+  margin-bottom: -20px;
+  letter-spacing: -0.04em;
+  pointer-events: none;
+}
+
+
+.timeline-item:nth-child(odd) .content::before {
+  text-align: right;
+}
+.timeline-item:nth-child(even) .content::before {
+  text-align: left;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
   .timeline-container {
-    max-width: 100%;
-    margin: 0;
+    padding: 60px 28px 0;
   }
+
+  .timeline-container::before { display: none; }
+  .timeline-item::before,
+  .timeline-item::after       { display: none; }
 
   .timeline-item {
-    /* 2. Cambiamos a flex-column para controlar el orden */
-    display: flex;
-    flex-direction: column; 
-    gap: 20px;
-    margin-bottom: 60px;
-    direction: ltr !important; /* Forzamos orden normal para todos */
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin-bottom: 80px;
   }
 
-  /* 3. IMAGEN PRIMERO */
-  .timeline-item .media {
-    order: 1; /* Esto la pone arriba */
-    width: 100%;
-  }
-
-  /* 4. TEXTO SEGUNDO Y A LA IZQUIERDA */
-  .timeline-item .content {
-    order: 2; /* Esto lo pone abajo de la imagen */
-    width: 100%;
-    text-align: left; /* Alineado a la izquierda */
-  }
-
-  .timeline-item .story {
+  .timeline-item:nth-child(odd) .content,
+  .timeline-item:nth-child(even) .content {
+    order: 2;
     text-align: left;
-    margin-bottom: 20px;
+    padding: 28px 0 0;
   }
 
-  .timeline p {
-    max-width: 100%; /* Que use todo el ancho disponible */
-    text-align: left;
-    margin-left: 0;
-  }
-
-  .timeline h3 {
-    text-align: left;
-  }
-
-  /* Reset de cualquier estilo intercalado que mueva el texto */
-  .timeline-item:nth-child(even) .content,
+  .timeline-item:nth-child(odd) .media,
   .timeline-item:nth-child(even) .media {
-    direction: ltr !important;
+    order: 1;
+    padding: 0;
+  }
+
+  .timeline-item:nth-child(odd) .content .story,
+  .timeline-item:nth-child(even) .content .story {
+    align-items: flex-start;
+  }
+
+  .timeline-item:nth-child(odd) .content::before,
+  .timeline-item:nth-child(even) .content::before {
     text-align: left;
-  }
-  .history-hero{
-    align-items: center;
-    justify-content: center; 
-  /* Asegura que el texto dentro del H1 también esté centrado */
-  text-align: center;
-  }
-
-  .history-hero h1{
-    font-size: 28px;
-  }
-
-  .content h3{
-    font-size: 20px;
-  }
-
-  .content p{
-    font-size: 12px;
   }
 }

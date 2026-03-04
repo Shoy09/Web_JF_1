@@ -1,8 +1,8 @@
 <div class="editor-container">
   <h1>
     <span></span>
-    Editor de Footer
-    <span class="header-badge">Footer</span>
+    Editor de pie de página
+    <span class="header-badge">Contendio inferior</span>
   </h1>
 
   <mat-tab-group animationDuration="300ms" [dynamicHeight]="true">
@@ -38,16 +38,16 @@
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>© Texto copyright</mat-label>
             <input matInput formControlName="copyright" placeholder="© Texto copyright">
-            <mat-hint>Este texto aparece abajo del footer</mat-hint>
+            <mat-hint>Este texto aparece a los lados de la pagina</mat-hint>
           </mat-form-field>
         </form>
       </mat-card>
     </mat-tab>
 
     <!-- TAB: Menú Izquierdo -->
-    <mat-tab label="Menú Izquierdo">
+    <mat-tab label="Base legal">
       <mat-card class="tab-card">
-        <h3>Ítems del Menú</h3>
+        <h3>Opciones del menú</h3>
         <form [formGroup]="footerForm">
           <div formArrayName="menuIzquierda">
             <mat-expansion-panel
@@ -74,7 +74,7 @@
             </mat-expansion-panel>
           </div>
           <button mat-raised-button color="primary" type="button" (click)="addMenuItem()">
-            <mat-icon>add</mat-icon> Agregar item
+            <mat-icon>add</mat-icon> Agregar
           </button>
         </form>
       </mat-card>

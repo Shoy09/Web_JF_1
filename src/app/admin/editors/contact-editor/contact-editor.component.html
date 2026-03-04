@@ -9,7 +9,7 @@
   <form [formGroup]="contactForm">
     <mat-tab-group animationDuration="300ms" [dynamicHeight]="true">
       <!-- ================= HEADER ================= -->
-      <mat-tab label="Header">
+      <mat-tab label="Encabezado">
         <mat-card class="tab-card">
           <div class="form-grid">
             <div class="full-width section-group">
@@ -30,7 +30,7 @@
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="full-width">
-                  <mat-label>Texto ayuda selector</mat-label>
+                  <mat-label>Texto de ayuda selector</mat-label>
                   <input matInput formControlName="selectHelp" placeholder="Selecciona tu región">
                 </mat-form-field>
 
@@ -40,7 +40,7 @@
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
-                  <mat-label>Placeholder región</mat-label>
+                  <mat-label>Texto guía región</mat-label>
                   <input matInput formControlName="regionPlaceholder" placeholder="Elige una región">
                 </mat-form-field>
               </div>
@@ -50,7 +50,7 @@
       </mat-tab>
 
       <!-- ================= BODY ================= -->
-      <mat-tab label="Body">
+      <mat-tab label="Contenido">
         <mat-card class="tab-card">
           <div class="form-grid" formGroupName="body">
             <!-- LEFT TEXTS -->
@@ -58,7 +58,7 @@
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                 <h3 style="display: flex; align-items: center; gap: 0.5rem; margin: 0;">
                   <mat-icon style="color: #3b82f6;">notes</mat-icon>
-                  Textos de la izquierda
+                  Contenido lateral izquierdo
                 </h3>
                 <button mat-raised-button type="button" (click)="addLeftText()">
                   <mat-icon>add</mat-icon> Agregar texto
@@ -127,12 +127,12 @@
 
                   <div [formGroupName]="i" class="form-grid">
                     <mat-form-field appearance="outline" class="full-width">
-                      <mat-label>Label del campo</mat-label>
+                      <mat-label>Nombre del campo</mat-label>
                       <input matInput formControlName="label" placeholder="Nombre completo">
                     </mat-form-field>
 
                     <mat-form-field appearance="outline" class="full-width">
-                      <mat-label>Placeholder</mat-label>
+                      <mat-label>Texto guía</mat-label>
                       <input matInput formControlName="placeholder" placeholder="Ej: Juan Pérez">
                     </mat-form-field>
 

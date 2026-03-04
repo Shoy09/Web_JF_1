@@ -11,9 +11,9 @@
   <mat-tab-group animationDuration="300ms" [dynamicHeight]="true">
 
     <!-- ================= HERO ================= -->
-    <mat-tab label="Hero">
+    <mat-tab label="Principal">
       <mat-card class="tab-card">
-        <h3>Hero sección</h3>
+        <h3>Sección Principal</h3>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Título principal</mat-label>
@@ -23,9 +23,9 @@
     </mat-tab>
 
     <!-- ================= TIMELINE ================= -->
-    <mat-tab label="Timeline">
+    <mat-tab label="Línea de tiempo">
       <mat-card class="tab-card">
-        <h3>Bloques del timeline</h3>
+        <h3>Bloques del Línea de tiempo</h3>
 
         <mat-accordion multi>
           <mat-expansion-panel
@@ -76,10 +76,7 @@
                 </div>
               </div>
 
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Alt</mat-label>
-                <input matInput [(ngModel)]="t.alt" [name]="'tAlt' + i" placeholder="Texto alternativo">
-              </mat-form-field>
+
 
             </div>
 

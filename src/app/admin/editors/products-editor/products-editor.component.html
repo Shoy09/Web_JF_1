@@ -94,10 +94,10 @@
 
           <!-- Imagen principal -->
           <div class="full-width">
-            <mat-form-field appearance="outline" class="full-width">
+            <!-- <mat-form-field appearance="outline" class="full-width">
               <mat-label>Imagen principal (URL actual)</mat-label>
               <input matInput [(ngModel)]="product.mainImage" name="mainImage">
-            </mat-form-field>
+            </mat-form-field> -->
 
             <div class="upload-row">
               <img *ngIf="product.mainImage"
@@ -149,16 +149,16 @@
       </mat-tab>
 
       <!-- TAB: Thumbnails -->
-      <mat-tab label="Thumbnails">
+      <mat-tab label="Imagenes">
         <mat-card class="tab-card">
           <h3>Imágenes miniatura</h3>
 
           <div *ngFor="let t of product.thumbnails; let i = index; trackBy: trackByIndex" class="card-editor">
             <div class="full-width">
-              <mat-form-field appearance="outline" class="full-width">
+              <!-- <mat-form-field appearance="outline" class="full-width">
                 <mat-label>URL imagen {{i + 1}}</mat-label>
                 <input matInput [(ngModel)]="product.thumbnails[i]" [name]="'thumb' + i">
-              </mat-form-field>
+              </mat-form-field> -->
 
               <div class="upload-row">
                 <img *ngIf="product.thumbnails[i]"
@@ -197,7 +197,7 @@
       </mat-tab>
 
       <!-- TAB: Features -->
-      <mat-tab label="Features">
+      <mat-tab label="Características">
         <mat-card class="tab-card">
           <h3>Características</h3>
 

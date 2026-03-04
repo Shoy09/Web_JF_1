@@ -3,7 +3,7 @@
   <!-- HEADER -->
   <h1>
     <span></span>
-    Editor Home
+    Editor de Inicio
     <span class="header-badge">Página Principal</span>
   </h1>
 
@@ -11,13 +11,13 @@
   <mat-tab-group animationDuration="300ms" [dynamicHeight]="true">
 
     <!-- HERO -->
-    <mat-tab label="Hero">
+    <mat-tab label="Principal">
       <mat-card class="tab-card">
-        <h3>Hero sección</h3>
+        <h3>Sección principal de bienvenida</h3>
 
         <div *ngFor="let line of homeData.hero.titleLines; let i=index; trackBy: trackByIndex" class="flex-row">
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Línea hero {{i+1}}</mat-label>
+            <mat-label>Frase principal {{i+1}}</mat-label>
             <input matInput [(ngModel)]="homeData.hero.titleLines[i]" [name]="'heroLine'+i">
           </mat-form-field>
           <button mat-icon-button color="warn" (click)="removeHeroLine(i)" matTooltip="Eliminar línea">
@@ -31,7 +31,7 @@
 
         <div class="form-grid" style="margin-top:1rem;">
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Texto botón</mat-label>
+            <mat-label>Texto del botón</mat-label>
             <input matInput [(ngModel)]="homeData.hero.buttonText" name="heroButtonText">
           </mat-form-field>
         </div>
@@ -39,9 +39,9 @@
     </mat-tab>
 
     <!-- ABOUT -->
-    <mat-tab label="About">
+    <mat-tab label="Nosotros">
       <mat-card class="tab-card">
-        <h3>About sección</h3>
+        <h3>Quiénes somos</h3>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Título</mat-label>
@@ -64,7 +64,7 @@
 
         <div class="form-grid" style="margin-top:1rem;">
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Texto link</mat-label>
+            <mat-label>Nombre del enlace</mat-label>
             <input matInput [(ngModel)]="homeData.about.linkText" name="aboutLinkText">
           </mat-form-field>
  
@@ -72,65 +72,83 @@
       </mat-card>
     </mat-tab>
 
-    <!-- CARDS -->
-    <mat-tab label="Cards">
-      <mat-card class="tab-card">
-        <h3>Cards</h3>
+<!-- CARDS -->
+<mat-tab label="Tarjetas">
+  <mat-card class="tab-card">
+    <h3>Tarjetas de información</h3>
 
-        <div *ngFor="let card of homeData.cards; let i=index; trackBy: trackByIndex" class="card-editor">
+    <mat-accordion>
+      <mat-expansion-panel
+        *ngFor="let card of homeData.cards; let i = index; trackBy: trackByIndex"
+        class="expansion-item">
 
-  <!-- Imagen -->
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Imagen (URL actual)</mat-label>
-    <input matInput [(ngModel)]="card.image" [name]="'img'+i">
-  </mat-form-field>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>image</mat-icon>
+            {{ card.title || 'Card ' + (i + 1) }}
+          </mat-panel-title>
+          <mat-panel-description>
+            {{ card.type === 'history' ? 'Historia' : 'Producto' }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
 
-  <div class="upload-row">
-    <img *ngIf="card.image" [src]="card.image"
-      style="height:80px; border-radius:4px; margin-bottom:8px; display:block;">
-    <input type="file" accept="image/*" (change)="onImageSelected(i, $event)">
-    <div class="dropzone"
-         (dragover)="onDragOver($event)"
-         (drop)="onDropImage(i, $event)">
-      <mat-icon>upload</mat-icon>
-      Arrastra aquí la imagen o selecciónala
-    </div>
-    <div class="filename" *ngIf="imageFileName(i)">
-      <mat-icon>image</mat-icon> {{ imageFileName(i) }}
-    </div>
-  </div>
+        <!-- Imagen
+        <mat-form-field appearance="outline" class="full-width" style="margin-top: 1rem;">
+          <mat-label>Imagen (URL)</mat-label>
+          <input matInput [(ngModel)]="card.image" [name]="'img'+i">
+        </mat-form-field> -->
 
-  <!-- Título -->
-  <mat-form-field appearance="outline" class="full-width" style="margin-top: 1rem;">
-    <mat-label>Título</mat-label>
-    <input matInput [(ngModel)]="card.title" [name]="'title'+i">
-  </mat-form-field>
+        <div class="upload-row">
+          <img *ngIf="card.image" [src]="card.image"
+            style="height:80px; border-radius:4px; margin-bottom:8px; display:block;">
+          <input type="file" accept="image/*" (change)="onImageSelected(i, $event)">
+          <div class="dropzone"
+               (dragover)="onDragOver($event)"
+               (drop)="onDropImage(i, $event)">
+            <mat-icon>upload</mat-icon>
+            Arrastra aquí la imagen o selecciónala
+          </div>
+          <div class="filename" *ngIf="imageFileName(i)">
+            <mat-icon>image</mat-icon> {{ imageFileName(i) }}
+          </div>
+        </div>
 
-  <!-- Texto botón + Tipo -->
-  <div class="form-grid">
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Texto botón</mat-label>
-      <input matInput [(ngModel)]="card.buttonText" [name]="'btn'+i">
-    </mat-form-field>
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Tipo</mat-label>
-      <select matNativeControl [(ngModel)]="card.type" [name]="'type'+i">
-        <option value="history">Historia</option>
-        <option value="product">Producto</option>
-      </select>
-    </mat-form-field>
-  </div>
+        <!-- Título -->
+        <mat-form-field appearance="outline" class="full-width" style="margin-top: 1rem;">
+          <mat-label>Título</mat-label>
+          <input matInput [(ngModel)]="card.title" [name]="'title'+i">
+        </mat-form-field>
 
-  <button mat-raised-button color="warn" (click)="removeCard(i)">
-    <mat-icon>delete</mat-icon> Eliminar card
-  </button>
-  <hr>
-</div>
-        <button mat-raised-button color="primary" (click)="addCard()">
-          <mat-icon>add</mat-icon> Agregar card
-        </button>
-      </mat-card>
-    </mat-tab>
+        <!-- Texto botón + Tipo -->
+        <div class="form-grid">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Texto del botón</mat-label>
+            <input matInput [(ngModel)]="card.buttonText" [name]="'btn'+i">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Tipo</mat-label>
+            <select matNativeControl [(ngModel)]="card.type" [name]="'type'+i">
+              <option value="history">Historia</option>
+              <option value="product">Producto</option>
+            </select>
+          </mat-form-field>
+        </div>
+
+        <!-- Acciones -->
+        <div class="full-width panel-actions">
+          <button mat-raised-button color="warn" type="button" (click)="removeCard(i)">
+            <mat-icon>delete</mat-icon> Eliminar
+          </button>
+        </div>
+
+      </mat-expansion-panel>
+    </mat-accordion>
+
+    <button mat-raised-button color="primary" type="button" (click)="addCard()" style="margin-top: 1rem;">
+      <mat-icon>add</mat-icon> Agregar card
+    </button>
+  </mat-card>
+</mat-tab>
 
   </mat-tab-group>
 
