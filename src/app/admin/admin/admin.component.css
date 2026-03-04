@@ -278,6 +278,7 @@
     overflow-y: auto;           /* ← scroll dentro del menú */
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
+    z-index: 999;
   }
 
   .admin-menu.open {
