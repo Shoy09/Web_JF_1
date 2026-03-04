@@ -663,3 +663,16 @@ input[type="file"]::file-selector-button:hover {
     align-items: flex-start;
   }
 }
+@media (max-width: 640px) {
+  .editor-container > h1 {
+    font-size: 1.9rem;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0 0 1.25rem;
+  }
+
+  .header-badge {
+    font-size: 0.65rem;
+    padding: 2px 8px;
+  }
+}

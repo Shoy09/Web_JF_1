@@ -226,23 +226,25 @@
   :host { --nav-w: 260px; }
 
   /* Barra superior fija en móvil */
-  .admin-container::before {
+.admin-container::before {
     content: '';
     display: block;
-    position: fixed;
+    position: absolute;
     top: 0; left: 0; right: 0;
     height: 56px;
     background: #1e293b;
     z-index: 100;
     box-shadow: 0 2px 8px rgba(0,0,0,.2);
-  }
+}
 
   /* Hamburguesa centrada verticalmente en la barra */
-  .hamburger-btn {
+.hamburger-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    position: fixed;
+    position: absolute;  /* Cambiado de fixed a absolute */
+        gap: 25px;  /* Separación de 10px entre elementos */
+
     top: 14px;
     left: 1rem;
     z-index: 101;
@@ -252,7 +254,15 @@
     padding: 0.4rem;
     cursor: pointer;
     transition: background .15s;
-  }
+}
+.hamburger-btn span {
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: white;
+}
 
   .hamburger-btn:hover {
     background: rgba(255,255,255,.1);
