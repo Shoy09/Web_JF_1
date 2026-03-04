@@ -766,3 +766,67 @@ input[type="file"]::file-selector-button:hover {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+/* ── Products Header ── */
+.products-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.products-header h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-1);
+  padding-bottom: 0;
+  border-bottom: none;
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .products-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .products-header button {
+    width: 100%;
+  }
+}
+
+/* ── Product Actions ── */
+.product-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .product-actions {
+    flex-direction: column;
+  }
+
+  .product-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .editor-container > h1 {
+    font-size: 1.9rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .header-badge {
+    font-size: 0.65rem;
+  }
+}

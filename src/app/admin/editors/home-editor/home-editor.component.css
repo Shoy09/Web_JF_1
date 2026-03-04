@@ -575,3 +575,17 @@ mat-hint {
 .card-editor + .card-editor {
   margin-top: 1.5rem;
 }
+
+.card-image-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  align-items: start;
+}
+
+@media (max-width: 640px) {
+  .card-image-grid {
+    grid-template-columns: 1fr;
+  }
+}

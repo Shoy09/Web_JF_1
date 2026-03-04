@@ -67,7 +67,7 @@
             <mat-label>Texto link</mat-label>
             <input matInput [(ngModel)]="homeData.about.linkText" name="aboutLinkText">
           </mat-form-field>
-
+ 
         </div>
       </mat-card>
     </mat-tab>
@@ -78,56 +78,54 @@
         <h3>Cards</h3>
 
         <div *ngFor="let card of homeData.cards; let i=index; trackBy: trackByIndex" class="card-editor">
-          <div class="form-grid">
 
-            <div class="full-width">
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Imagen (URL actual)</mat-label>
-                <input matInput [(ngModel)]="card.image" [name]="'img'+i">
-              </mat-form-field>
+  <!-- Imagen -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Imagen (URL actual)</mat-label>
+    <input matInput [(ngModel)]="card.image" [name]="'img'+i">
+  </mat-form-field>
 
-              <div class="upload-row">
-                <img *ngIf="card.image" [src]="card.image" 
-     style="height:80px; border-radius:4px; margin-bottom:8px; display:block;">
-                <input type="file" accept="image/*" (change)="onImageSelected(i, $event)">
-                <div class="dropzone"
-                     (dragover)="onDragOver($event)"
-                     (drop)="onDropImage(i, $event)">
-                  <mat-icon>upload</mat-icon>
-                  Arrastra aquí la imagen o selecciónala
-                </div>
-                <div class="filename" *ngIf="imageFileName(i)">
-                  <mat-icon>image</mat-icon> {{ imageFileName(i) }}
-                </div>
-              </div>
-            </div>
+  <div class="upload-row">
+    <img *ngIf="card.image" [src]="card.image"
+      style="height:80px; border-radius:4px; margin-bottom:8px; display:block;">
+    <input type="file" accept="image/*" (change)="onImageSelected(i, $event)">
+    <div class="dropzone"
+         (dragover)="onDragOver($event)"
+         (drop)="onDropImage(i, $event)">
+      <mat-icon>upload</mat-icon>
+      Arrastra aquí la imagen o selecciónala
+    </div>
+    <div class="filename" *ngIf="imageFileName(i)">
+      <mat-icon>image</mat-icon> {{ imageFileName(i) }}
+    </div>
+  </div>
 
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Título</mat-label>
-              <input matInput [(ngModel)]="card.title" [name]="'title'+i">
-            </mat-form-field>
-          </div>
+  <!-- Título -->
+  <mat-form-field appearance="outline" class="full-width" style="margin-top: 1rem;">
+    <mat-label>Título</mat-label>
+    <input matInput [(ngModel)]="card.title" [name]="'title'+i">
+  </mat-form-field>
 
-          <div class="form-grid">
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Texto botón</mat-label>
-              <input matInput [(ngModel)]="card.buttonText" [name]="'btn'+i">
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Tipo</mat-label>
-              <select matNativeControl [(ngModel)]="card.type" [name]="'type'+i">
-                <option value="history">Historia</option>
-                <option value="product">Producto</option>
-              </select>
-            </mat-form-field>
-          </div>
+  <!-- Texto botón + Tipo -->
+  <div class="form-grid">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Texto botón</mat-label>
+      <input matInput [(ngModel)]="card.buttonText" [name]="'btn'+i">
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Tipo</mat-label>
+      <select matNativeControl [(ngModel)]="card.type" [name]="'type'+i">
+        <option value="history">Historia</option>
+        <option value="product">Producto</option>
+      </select>
+    </mat-form-field>
+  </div>
 
-          <button mat-raised-button color="warn" (click)="removeCard(i)">
-            <mat-icon>delete</mat-icon> Eliminar card
-          </button>
-          <hr>
-        </div>
-
+  <button mat-raised-button color="warn" (click)="removeCard(i)">
+    <mat-icon>delete</mat-icon> Eliminar card
+  </button>
+  <hr>
+</div>
         <button mat-raised-button color="primary" (click)="addCard()">
           <mat-icon>add</mat-icon> Agregar card
         </button>
