@@ -236,25 +236,19 @@
 @media (max-width: 768px) {
   .hamburger-btn {
     display: flex;
-    align-items: center;
+    align-items: left;
     justify-content: center;
-    position: fixed;
-    top: 1rem;
+    position:relative;
+    top: 2rem;
     left: 1rem;
-    z-index: 101;
-    background: #1e293b;
     border: none;
     border-radius: 8px;
-    padding: 0.5rem;
     cursor: pointer;
-    
-    
   }
 
   .menu-overlay {
     display: block;  
     pointer-events: none; /* ← no captura clicks cuando está oculto */
-
   }
 
   .menu-overlay.visible {
